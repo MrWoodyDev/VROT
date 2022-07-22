@@ -46,6 +46,13 @@ namespace VROT
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })
+                .UseConsoleLifetime();
+
+            var host = builder.Build();
+            using (host)
+            {
+                await host.RunAsync();
+            }
         }
     }
 }
