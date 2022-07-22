@@ -52,11 +52,6 @@ namespace VROT
                     services
                         .AddHostedService<CommandHandler>();
                 })
-                .UseInteractionService((context, config) =>
-                {
-                    config.LogLevel = LogSeverity.Info;
-                    config.UseCompiledLambda = true;
-                })
                 .UseConsoleLifetime();
 
             var host = builder.Build();

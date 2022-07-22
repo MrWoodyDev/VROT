@@ -11,11 +11,11 @@ namespace VROT.Services
     public class CommandHandler : DiscordClientService
     {
         private readonly IServiceProvider _provider;
-        private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
         private readonly IConfiguration _config;
 
-        public CommandHandler(DiscordSocketClient client, ILogger<CommandHandler> logger, IServiceProvider provider, CommandService commandService, IConfiguration config) : base(client, logger)
+        public CommandHandler(DiscordSocketClient client, ILogger<CommandHandler> logger, IServiceProvider provider,
+            CommandService commandService, IConfiguration config) : base(client, logger)
         {
             _provider = provider;
             _commandService = commandService;
