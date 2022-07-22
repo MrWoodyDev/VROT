@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Discord;
 using Discord.Addons.Hosting;
 using Discord.Commands;
 using Discord.WebSocket;
-
+using VROT.Services;
 
 
 namespace VROT
@@ -46,6 +47,16 @@ namespace VROT
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })
+                .ConfigureServices((context, services) =>
+                {
+                    services
+                        .AddHostedService<CommandHandler>();
+                })
+                .UseInteractionService((context, config) =>
+                {
+                    config.LogLevel = LogSeverity.Info;
+                    config.UseCompiledLambda = true;
+                })
                 .UseConsoleLifetime();
 
             var host = builder.Build();
@@ -53,6 +64,8 @@ namespace VROT
             {
                 await host.RunAsync();
             }
+
+
         }
     }
 }
