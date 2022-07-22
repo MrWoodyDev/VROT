@@ -40,6 +40,12 @@ namespace VROT
 
                     config.Token = context.Configuration["Token"];
                 })
+                .UseCommandService((context, config) =>
+                {
+                    config.CaseSensitiveCommands = false;
+                    config.LogLevel = LogSeverity.Debug;
+                    config.DefaultRunMode = RunMode.Sync;
+                })
         }
     }
 }
