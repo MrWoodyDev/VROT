@@ -20,7 +20,11 @@ namespace VROT
 
                     x.AddConfiguration(config);
                 })
-
+                .ConfigureLogging(x =>
+                {
+                    x.AddConsole();
+                    x.SetMinimumLevel(LogLevel.Debug);
+                })
         }
     }
 }
