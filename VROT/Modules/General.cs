@@ -19,6 +19,7 @@ namespace VROT.Modules
         public async Task EchoAsync([Remainder] string text)
         {
             await Context.Channel.SendMessageAsync(text);
+            await Context.Channel.DeleteMessageAsync(Context.Message.Id);
         }
 
         [Command("info")]
