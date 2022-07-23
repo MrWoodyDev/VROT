@@ -42,5 +42,15 @@ namespace VROT.Modules
             await ReplyAsync(embed: embed);
         }
 
+        [Command("clear")]
+        public async Task Clear(int amount)
+        {
+            IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
+            await ((ITextChannel)Context.Channel).DeleteMessagesAsync(messages);
+            const int delay = 3000;
+            IUserMessage m = await ReplyAsync($"I have deleted {amount} messages for ya. :)");
+            await Task.Delay(delay);
+            await m.DeleteAsync();
+        }
     }
 }
