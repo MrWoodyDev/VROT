@@ -13,6 +13,7 @@ namespace VROT.Modules
         public async Task PingAsync()
         {
             await Context.Message.ReplyAsync($"Вставай заебал");
+            await Context.Channel.DeleteMessageAsync(Context.Message.Id);
         }
 
         [Command("say")]
@@ -23,23 +24,23 @@ namespace VROT.Modules
         }
 
         [Command("info")]
-        public async Task InfoAsync(SocketGuildUser socketGuildUser = null)
+        public async Task InfoAsync(SocketGuildUser? socketGuildUser = null)
         {
-            if (socketGuildUser == null)
+            socketGuildUser ??= Context.User as SocketGuildUser;
+
+            if (socketGuildUser != null)
             {
-                socketGuildUser = Context.User as SocketGuildUser;
+                var embed = new VrotEmbedBuilder()
+                    .WithTitle($"{socketGuildUser.Username}#{socketGuildUser.Discriminator}")
+                    .AddField("ID", socketGuildUser.Id, true)
+                    .AddField("Name", $"{socketGuildUser.Username}#{socketGuildUser.Discriminator}", true)
+                    .AddField("Created at", socketGuildUser.CreatedAt, true)
+                    .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
+                    .WithCurrentTimestamp()
+                    .Build();
+
+                await ReplyAsync(embed: embed);
             }
-
-            var embed = new VrotEmbedBuilder()
-                .WithTitle($"{socketGuildUser.Username}#{socketGuildUser.Discriminator}")
-                .AddField("ID", socketGuildUser.Id, true)
-                .AddField("Name", $"{socketGuildUser.Username}#{socketGuildUser.Discriminator}", true)
-                .AddField("Created at", socketGuildUser.CreatedAt, true)
-                .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
-                .WithCurrentTimestamp()
-                .Build();
-
-            await ReplyAsync(embed: embed);
         }
 
         [Command("clear")]
@@ -52,5 +53,24 @@ namespace VROT.Modules
             await Task.Delay(delay);
             await m.DeleteAsync();
         }
+
+        [Command("ban")]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        public async Task banUser(string banre, [Remainder] SocketGuildUser usertobehammered)
+        {
+            var rUser = Context.User as SocketGuildUser;
+            var role = Context.Guild.Roles.FirstOrDefault(x => x.Name == "Bot Admin");
+
+            if (rUser.Roles.Contains(role))
+            {
+                await ReplyAsync($"User {usertobehammered.Mention} has been banned.");
+                await Context.Guild.AddBanAsync(usertobehammered, 0, banre);
+            }
+            else
+            {
+                await ReplyAsync(":no_entry_sign: You need the Bot Admin role to do that!");
+            }
+        }
     }
 }
+
