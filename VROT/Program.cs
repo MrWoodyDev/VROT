@@ -51,7 +51,15 @@ namespace VROT
                 {
                     services
                         .AddHostedService<CommandHandler>();
-                });
+                })
+                .UseConsoleLifetime();
+
+            var host = builder.Build();
+            using (host)
+            {
+                await host.RunAsync();
+            }
         }
+        //dadsd//
     }
 }
