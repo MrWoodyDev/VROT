@@ -20,7 +20,7 @@ namespace VROT
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsetting.json", false, true)
+                        .AddJsonFile("appsetting.json", true, true)
                         .Build();
 
                     x.AddConfiguration(configuration);
@@ -35,7 +35,7 @@ namespace VROT
                     config.SocketConfig = new DiscordSocketConfig
                     {
                         LogLevel = LogSeverity.Debug,
-                        AlwaysDownloadUsers = false,
+                        AlwaysDownloadUsers = true,
                         MessageCacheSize = 200,
                     };
 
@@ -43,7 +43,7 @@ namespace VROT
                 })
                 .UseCommandService((context, config) =>
                 {
-                    config.CaseSensitiveCommands = false;
+                    config.CaseSensitiveCommands = true;
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })
@@ -59,9 +59,6 @@ namespace VROT
             {
                 await host.RunAsync();
             }
-
-
         }
     }
 }
-
