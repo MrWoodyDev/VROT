@@ -47,6 +47,11 @@ namespace VROT
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })
+                .UseInteractionService((context, config) =>
+                {
+                    config.LogLevel = LogSeverity.Info;
+                    config.UseCompiledLambda = true;
+                })
                 .ConfigureServices((context, services) =>
                 {
                     services
@@ -60,5 +65,6 @@ namespace VROT
                 await host.RunAsync();
             }
         }
+        //aaaa
     }
 }
