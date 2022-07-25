@@ -1,11 +1,11 @@
-﻿using Discord;
-using Discord.Commands;
-using System.Threading.Tasks;
-using Discord.WebSocket;
-using VROT.Common;
-
-namespace VROT.Modules
+﻿namespace VROT.Modules
 {
+    using Discord;
+    using Discord.Commands;
+    using System.Threading.Tasks;
+    using Discord.WebSocket;
+    using VROT.Common;
+
     public class General : ModuleBase<SocketCommandContext>
     {
         [Command("ping")]
@@ -61,7 +61,7 @@ namespace VROT.Modules
             var rUser = Context.User as SocketGuildUser;
             var role = Context.Guild.Roles.FirstOrDefault(x => x.Name == "Bot Admin");
 
-            if (rUser.Roles.Contains(role))
+            if (rUser != null && rUser.Roles.Contains(role))
             {
                 await ReplyAsync($"User {usertobehammered.Mention} has been banned.");
                 await Context.Guild.AddBanAsync(usertobehammered, 0, banre);

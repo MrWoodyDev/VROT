@@ -1,13 +1,13 @@
-﻿using System.Reflection;
-using Discord;
-using Discord.Addons.Hosting;
-using Discord.Commands;
-using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
-namespace VROT.Services
+﻿namespace VROT.Services
 {
+    using System.Reflection;
+    using Discord;
+    using Discord.Addons.Hosting;
+    using Discord.Commands;
+    using Discord.WebSocket;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+
     public class CommandHandler : DiscordClientService
     {
         private readonly IServiceProvider _provider;

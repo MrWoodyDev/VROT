@@ -17,6 +17,10 @@
     <PackageReference Include="Discord.Net.Webhook" Version="3.7.2" />
     <PackageReference Include="Discord.Net.WebSocket" Version="3.7.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -1,16 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
-using Discord;
-using Discord.Addons.Hosting;
-using Discord.Commands;
-using Discord.WebSocket;
-using VROT.Services;
-
-
-namespace VROT
+﻿namespace VROT
 {
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Hosting;
+    using Discord;
+    using Discord.Addons.Hosting;
+    using Discord.Commands;
+    using Discord.WebSocket;
+    using VROT.Services;
     class Program
     {
         static async Task Main()
