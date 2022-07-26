@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:File should have header", Justification = "Project does not have copyright, licensed as MIT.", Scope = "namespace")]
+[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:File should have header", Justification = "Project does not have copyright, licensed as MIT.", Scope = "namespace", Target = "~N:VROT")]

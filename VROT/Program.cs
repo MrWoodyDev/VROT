@@ -10,16 +10,19 @@
     using Microsoft.Extensions.Logging;
     using VROT.Services;
 
-    public class Program
+    /// <summary>
+    /// The entry of the bot.
+    /// </summary>
+    internal class Program
     {
-        public static async Task Main()
+        private static async Task Main()
         {
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration(x =>
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsetting.json", true, true)
+                        .AddJsonFile("appsetting.json", false, true)
                         .Build();
 
                     x.AddConfiguration(configuration);
@@ -34,7 +37,7 @@
                     config.SocketConfig = new DiscordSocketConfig
                     {
                         LogLevel = LogSeverity.Debug,
-                        AlwaysDownloadUsers = true,
+                        AlwaysDownloadUsers = false,
                         MessageCacheSize = 200,
                     };
 
@@ -42,7 +45,7 @@
                 })
                 .UseCommandService((context, config) =>
                 {
-                    config.CaseSensitiveCommands = true;
+                    config.CaseSensitiveCommands = false;
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })

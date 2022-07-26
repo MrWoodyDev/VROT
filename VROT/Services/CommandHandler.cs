@@ -1,6 +1,9 @@
 ﻿namespace VROT.Services
 {
+    using System;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Discord;
     using Discord.Addons.Hosting;
     using Discord.Commands;
@@ -8,44 +11,69 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// The class responsible for handling the commands and various events.
+    /// </summary>
     public class CommandHandler : DiscordClientService
     {
-        private readonly IServiceProvider _provider;
-        private readonly CommandService _commandService;
-        private readonly IConfiguration _config;
+        private readonly IServiceProvider provider;
+        private readonly CommandService commandService;
+        private readonly IConfiguration config;
 
-        public CommandHandler(DiscordSocketClient client, ILogger<CommandHandler> logger, IServiceProvider provider,
-            CommandService commandService, IConfiguration config) : base(client, logger)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandHandler"/> class.
+        /// </summary>
+        /// <param name="client">The <see cref="DiscordSocketClient"/> that should be injected.</param>
+        /// <param name="logger">The <see cref="ILogger"/> that should be injected.</param>
+        /// <param name="provider">The <see cref="IServiceProvider"/> that should be injected.</param>
+        /// <param name="commandService">The <see cref="CommandService"/> that should be injected.</param>
+        /// <param name="config">The <see cref="IConfiguration"/> that should be injected.</param>
+        public CommandHandler(DiscordSocketClient client, ILogger<CommandHandler> logger, IServiceProvider provider, CommandService commandService, IConfiguration config)
+            : base(client, logger)
         {
-            _provider = provider;
-            _commandService = commandService;
-            _config = config;
+            this.provider = provider;
+            this.commandService = commandService;
+            this.config = config;
         }
+
+        /// <inheritdoc/>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Client.MessageReceived += HandleMessage;
-            _commandService.CommandExecuted += CommandExecutedAsync;
-            await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
+            this.Client.MessageReceived += this.HandleMessage;
+            this.commandService.CommandExecuted += this.CommandExecutedAsync;
+            await this.commandService.AddModulesAsync(Assembly.GetEntryAssembly(), this.provider);
         }
 
         private async Task HandleMessage(SocketMessage incomingMessage)
         {
-            if (incomingMessage is not SocketUserMessage message) return;
-            if (message.Source != MessageSource.User) return;
+            if (incomingMessage is not SocketUserMessage message)
+            {
+                return;
+            }
 
-            int argPos = 0;
-            if (!message.HasStringPrefix(_config["Prefix"], ref argPos) && !message.HasMentionPrefix(Client.CurrentUser, ref argPos)) return;
+            if (message.Source != MessageSource.User)
+            {
+                return;
+            }
 
-            var context = new SocketCommandContext(Client, message);
-            await _commandService.ExecuteAsync(context, argPos, _provider);
+            var argPos = 0;
+            if (!message.HasStringPrefix(this.config["Prefix"], ref argPos) && !message.HasMentionPrefix(this.Client.CurrentUser, ref argPos))
+            {
+                return;
+            }
+
+            var context = new SocketCommandContext(this.Client, message);
+            await this.commandService.ExecuteAsync(context, argPos, this.provider);
         }
 
-        public async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        private async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
-            Logger.LogInformation("User {user} attempted to use command {command}", context.User, command.Value.Name);
+            this.Logger.LogInformation("User {user} attempted to use command {command}", context.User, command.Value.Name);
 
             if (!command.IsSpecified || result.IsSuccess)
+            {
                 return;
+            }
 
             await context.Channel.SendMessageAsync($"Error: {result}");
         }
