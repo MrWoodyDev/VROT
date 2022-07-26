@@ -54,6 +54,12 @@ namespace VROT.Modules
             await Task.Delay(delay);
             await m.DeleteAsync();
         }
+
+        [Command("activity")]
+        public async Task Activity()
+        {
+
+        }
     }
 }
 
