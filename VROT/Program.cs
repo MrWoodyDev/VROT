@@ -11,9 +11,9 @@ using VROT.Services;
 
 namespace VROT
 {
-    class Program
+   public class Program
     {
-        static async Task Main()
+        private static async Task Main()
         {
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration(x =>
