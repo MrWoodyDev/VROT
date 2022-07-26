@@ -3,11 +3,18 @@ using Discord.Commands;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using VROT.Common;
+using VROT.Models;
 
 namespace VROT.Modules
 {
     public class General : ModuleBase<SocketCommandContext>
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+        public General(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         [Command("ping")]
         [Alias("p")]
         public async Task PingAsync()
@@ -53,6 +60,21 @@ namespace VROT.Modules
             IUserMessage m = await ReplyAsync($"I have deleted {amount} messages for ya. :)");
             await Task.Delay(delay);
             await m.DeleteAsync();
+        }
+        [Command("activity")]
+        public async Task Activity()
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            var response = await httpClient.GetStringAsync("http://www.boredapi.com/api/activity/");
+            var activity = Event.FromJson(response);
+
+            if (activity == null)
+            {
+                await ReplyAsync("An error occurred, please try again later.");
+                return;
+            }
+
+            await ReplyAsync($"**Activity:** {activity.Activity}\n**Participants:** {activity.Participants}\n**Type:** {activity.Type}\n**Price:** {activity.Price}\n**Accessibility:** {activity.Accessibility}");
         }
     }
 }

@@ -17,6 +17,7 @@
     <PackageReference Include="Discord.Net.Webhook" Version="3.7.2" />
     <PackageReference Include="Discord.Net.WebSocket" Version="3.7.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
