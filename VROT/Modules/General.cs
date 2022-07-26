@@ -65,7 +65,7 @@ namespace VROT.Modules
         public async Task Activity()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var response = await httpClient.GetStringAsync("https://www.boredapi.com/api/activity/");
+            var response = await httpClient.GetStringAsync("http://www.boredapi.com/api/activity/");
             var activity = Event.FromJson(response);
 
             if (activity == null)

@@ -10,10 +10,10 @@ namespace VROT.Models
     public partial class Event
     {
         [JsonProperty("activity")]
-        public string Activity { get; set; }
+        public string? Activity { get; set; }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [JsonProperty("participants")]
         public long Participants { get; set; }
@@ -22,7 +22,7 @@ namespace VROT.Models
         public double Price { get; set; }
 
         [JsonProperty("link")]
-        public string Link { get; set; }
+        public string? Link { get; set; }
 
         [JsonProperty("key")]
         [JsonConverter(typeof(ParseStringConverter))]
@@ -34,6 +34,6 @@ namespace VROT.Models
 
     public partial class Event
     {
-        public static Event? FromJson(string json) => JsonConvert.DeserializeObject<Event>(json, Converter.Settings);
+        public static Event FromJson(string json) => JsonConvert.DeserializeObject<Event>(json, Converter.Settings);
     }
 }
