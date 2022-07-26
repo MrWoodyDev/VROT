@@ -11,7 +11,7 @@ using VROT.Services;
 
 namespace VROT
 {
-    class Program
+    internal class Program
     {
         static async Task Main()
         {
