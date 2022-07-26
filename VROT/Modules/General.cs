@@ -41,7 +41,7 @@ namespace VROT.Modules
                     .Build();
 
                 await ReplyAsync(embed: embed);
-                await Context.Channel.DeleteMessageAsync(Context.Message.Id);
+                //await Context.Channel.DeleteMessageAsync(Context.Message.Id);
             }
         }
 
