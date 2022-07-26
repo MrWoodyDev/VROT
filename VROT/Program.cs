@@ -1,18 +1,15 @@
-﻿namespace VROT
-{
-    using Discord;
-    using Discord.Addons.Hosting;
-    using Discord.Commands;
-    using Discord.WebSocket;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
-    using VROT.Services;
+   using Discord;
+   using Discord.Addons.Hosting;
+   using Discord.Commands;
+   using Discord.WebSocket;
+   using Microsoft.Extensions.Configuration;
+   using Microsoft.Extensions.DependencyInjection;
+   using Microsoft.Extensions.Hosting;
+   using Microsoft.Extensions.Logging;
+   using VROT.Services;
 
-    /// <summary>
-    /// The entry of the bot.
-    /// </summary>
+namespace VROT
+{
     internal class Program
     {
         private static async Task Main()
