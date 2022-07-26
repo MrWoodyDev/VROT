@@ -53,24 +53,6 @@ namespace VROT.Modules
             await Task.Delay(delay);
             await m.DeleteAsync();
         }
-
-        [Command("ban")]
-        [RequireBotPermission(GuildPermission.BanMembers)]
-        public async Task banUser(string banre, [Remainder] SocketGuildUser usertobehammered)
-        {
-            var rUser = Context.User as SocketGuildUser;
-            var role = Context.Guild.Roles.FirstOrDefault(x => x.Name == "Bot Admin");
-
-            if (rUser.Roles.Contains(role))
-            {
-                await ReplyAsync($"User {usertobehammered.Mention} has been banned.");
-                await Context.Guild.AddBanAsync(usertobehammered, 0, banre);
-            }
-            else
-            {
-                await ReplyAsync(":no_entry_sign: You need the Bot Admin role to do that!");
-            }
-        }
     }
 }
 
