@@ -39,7 +39,7 @@ namespace VROT.Modules
                     .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
                     .WithCurrentTimestamp()
                     .Build();
-
+                await Context.Channel.DeleteMessageAsync(Context.Message.Id);
                 await ReplyAsync(embed: embed);
             }
         }
