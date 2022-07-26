@@ -51,11 +51,14 @@
                     .AddField("ID", socketGuildUser.Id, true)
                     .AddField("Name", $"{socketGuildUser.Username}#{socketGuildUser.Discriminator}", true)
                     .AddField("Created at", socketGuildUser.CreatedAt, true)
+                    .AddField("Join at", socketGuildUser.JoinedAt, true)
                     .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
                     .WithCurrentTimestamp()
                     .Build();
+                await ReplyAsync(embed: embed);
+               await Context.Channel.DeleteMessageAsync(Context.Message.Id);
 
-                await this.ReplyAsync(embed: embed);
+
             }
         }
 
