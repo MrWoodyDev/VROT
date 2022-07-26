@@ -1,26 +1,25 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
-using Discord;
-using Discord.Addons.Hosting;
-using Discord.Commands;
-using Discord.WebSocket;
-using VROT.Services;
-
+   using Discord;
+   using Discord.Addons.Hosting;
+   using Discord.Commands;
+   using Discord.WebSocket;
+   using Microsoft.Extensions.Configuration;
+   using Microsoft.Extensions.DependencyInjection;
+   using Microsoft.Extensions.Hosting;
+   using Microsoft.Extensions.Logging;
+   using VROT.Services;
 
 namespace VROT
 {
     internal class Program
     {
-        static async Task Main()
+        private static async Task Main()
         {
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration(x =>
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsetting.json", true, true)
+                        .AddJsonFile("appsetting.json", false, true)
                         .Build();
 
                     x.AddConfiguration(configuration);
@@ -35,7 +34,7 @@ namespace VROT
                     config.SocketConfig = new DiscordSocketConfig
                     {
                         LogLevel = LogSeverity.Debug,
-                        AlwaysDownloadUsers = true,
+                        AlwaysDownloadUsers = false,
                         MessageCacheSize = 200,
                     };
 
@@ -43,7 +42,7 @@ namespace VROT
                 })
                 .UseCommandService((context, config) =>
                 {
-                    config.CaseSensitiveCommands = true;
+                    config.CaseSensitiveCommands = false;
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })
