@@ -24,6 +24,7 @@ namespace VROT.Modules
         }
 
         [Command("say")]
+        [Alias("s")]
         public async Task EchoAsync([Remainder] string text)
         {
             await Context.Channel.SendMessageAsync(text);
@@ -61,6 +62,7 @@ namespace VROT.Modules
             await Task.Delay(delay);
             await m.DeleteAsync();
         }
+
         [Command("activity")]
         public async Task Activity()
         {
