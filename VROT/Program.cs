@@ -20,7 +20,7 @@ namespace VROT
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsetting.json", true, true)
+                        .AddJsonFile("appsetting.json", false, true)
                         .Build();
 
                     x.AddConfiguration(configuration);
@@ -36,21 +36,23 @@ namespace VROT
                     {
                         LogLevel = LogSeverity.Debug,
                         AlwaysDownloadUsers = true,
+                        LogGatewayIntentWarnings = false,
                         MessageCacheSize = 200,
+                        GatewayIntents = GatewayIntents.All
                     };
 
                     config.Token = context.Configuration["Token"];
                 })
                 .UseCommandService((context, config) =>
                 {
-                    config.CaseSensitiveCommands = true;
+                    config.CaseSensitiveCommands = false;
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
                 })
                 .UseInteractionService((context, config) =>
                 {
                     config.LogLevel = LogSeverity.Info;
-                    config.UseCompiledLambda = true;
+                    config.UseCompiledLambda = false;
                 })
                 .ConfigureServices((context, services) =>
                 {
