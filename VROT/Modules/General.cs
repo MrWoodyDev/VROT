@@ -24,7 +24,7 @@ namespace VROT.Modules
         }
 
         [Command("say")]
-        [Alias("s")]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task EchoAsync([Remainder] string text)
         {
             await Context.Channel.SendMessageAsync(text);
@@ -53,6 +53,7 @@ namespace VROT.Modules
         }
 
         [Command("clear")]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Clear(int amount)
         {
             IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
