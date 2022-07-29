@@ -77,5 +77,34 @@ namespace VROT.Modules
             await ReplyAsync(embed: embed.Build());
             await user.KickAsync(reason);
         }
+
+        [Command("mute")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
+        public async Task Mute(SocketGuildUser user, [Remainder] double time)
+        {
+            if (time > 1000)
+            {
+                var builder = new EmbedBuilder();
+                builder.WithAuthor(Context.Client.CurrentUser);
+                builder.WithFooter(footer => footer.Text = Context.User.Username);
+                builder.WithTitle("**Oh, no!**");
+                builder.AddField("Error", "Максимальное время мута: 1000 минут", true);
+                builder.WithCurrentTimestamp();
+                await ReplyAsync(embed: builder.Build());
+            }
+            else
+            {
+                var builder = new EmbedBuilder();
+                builder.WithAuthor(Context.Client.CurrentUser);
+                builder.WithFooter(footer => footer.Text = Context.User.Username);
+                builder.WithTitle("**Успешно!**");
+                builder.WithDescription($"{user.Mention} замучен на {time} минут");
+                builder.WithCurrentTimestamp();
+                await ReplyAsync(embed: builder.Build());
+                await user.SetTimeOutAsync(TimeSpan.FromMinutes(time));
+                await Context.Channel.DeleteMessageAsync(Context.Message.Id);
+            }
+        }
     }
 }
