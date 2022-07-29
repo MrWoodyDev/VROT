@@ -38,7 +38,8 @@ namespace VROT
                         AlwaysDownloadUsers = true,
                         LogGatewayIntentWarnings = false,
                         MessageCacheSize = 200,
-                        GatewayIntents = GatewayIntents.All
+                        GatewayIntents = GatewayIntents.All |
+                                         GatewayIntents.AllUnprivileged
                     };
 
                     config.Token = context.Configuration["Token"];
