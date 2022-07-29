@@ -47,6 +47,7 @@ namespace VROT.Modules
                     .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
                     .WithCurrentTimestamp()
                     .Build();
+
                 await Context.Channel.DeleteMessageAsync(Context.Message.Id);
                 await ReplyAsync(embed: embed);
             }
@@ -65,7 +66,7 @@ namespace VROT.Modules
         }
 
         [Command("ban")]
-        [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав админа, идите нахуй)0))")]
+        [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
         public async Task BanMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
             if (user == null)
@@ -76,10 +77,10 @@ namespace VROT.Modules
             if (reason == null)
                 reason = "Причина не указана";
 
-            var embedBuilder = new EmbedBuilder()
+            var embed = new VrotEmbedBuilder()
                 .WithDescription($":white_check_mark: {user.Mention}получил банан\n**Причина :** {reason}")
-                .WithColor(new Color(255, 0, 0));
-            Embed embed = embedBuilder.Build();
+                .Build();
+
             await ReplyAsync(embed: embed);
             await Context.Guild.AddBanAsync(user, 0, reason);
         }
