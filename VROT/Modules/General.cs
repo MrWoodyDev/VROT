@@ -24,7 +24,7 @@ namespace VROT.Modules
         }
 
         [Command("say")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав админа, идите нахуй)0))")]
         public async Task EchoAsync([Remainder] string text)
         {
             await Context.Channel.SendMessageAsync(text);
@@ -53,7 +53,7 @@ namespace VROT.Modules
         }
 
         [Command("clear")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав админа, идите нахуй)0))")]
         public async Task Clear(int amount)
         {
             IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
@@ -62,6 +62,26 @@ namespace VROT.Modules
             IUserMessage m = await ReplyAsync($"I have deleted {amount} messages for ya. :)");
             await Task.Delay(delay);
             await m.DeleteAsync();
+        }
+
+        [Command("ban")]
+        [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав админа, идите нахуй)0))")]
+        public async Task BanMember(SocketGuildUser user = null, [Remainder] string reason = null)
+        {
+            if (user == null)
+            {
+                await ReplyAsync("Пользователь не указан");
+                return;
+            }
+            if (reason == null)
+                reason = "Причина не указана";
+
+            var embedBuilder = new EmbedBuilder()
+                .WithDescription($":white_check_mark: {user.Mention}получил банан\n**Причина :** {reason}")
+                .WithColor(new Color(255, 0, 0));
+            Embed embed = embedBuilder.Build();
+            await ReplyAsync(embed: embed);
+            await Context.Guild.AddBanAsync(user, 0, reason);
         }
 
         [Command("activity")]
