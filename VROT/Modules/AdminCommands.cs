@@ -38,8 +38,11 @@ namespace VROT.Modules
                 await ReplyAsync("Пользователь не указан");
                 return;
             }
+
             if (reason == null)
+            {
                 reason = "Причина не указана";
+            }
 
             var embed = new VrotEmbedBuilder()
                 .WithDescription($":white_check_mark: {user.Mention}получил банан\n**Причина :** {reason}")
@@ -47,6 +50,32 @@ namespace VROT.Modules
 
             await ReplyAsync(embed: embed);
             await Context.Guild.AddBanAsync(user, 0, reason);
+        }
+
+        [Command("kick")]
+        [RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
+        public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
+        {
+
+            if (user == null)
+            {
+                await ReplyAsync("Пользователь не указан");
+                return;
+            }
+
+            if (reason == null)
+            {
+                reason = "Причина не указана";
+            }
+
+            var embed = new VrotEmbedBuilder()
+                .WithAuthor(Context.Client.CurrentUser)
+                .WithFooter(footer => footer.Text = Context.User.Username)
+                .WithDescription($":white_check_mark: {user.Mention}был кикнут\n**Причина :** {reason}")
+                .WithCurrentTimestamp();
+
+            await ReplyAsync(embed: embed.Build());
+            await user.KickAsync(reason);
         }
     }
 }
