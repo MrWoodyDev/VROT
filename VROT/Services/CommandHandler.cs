@@ -44,10 +44,10 @@ namespace VROT.Services
         {
             Logger.LogInformation("User {user} attempted to use command {command}", context.User, command.Value.Name);
 
-            if (!command.IsSpecified || result.IsSuccess)
-                return;
-
-            await context.Channel.SendMessageAsync($"Error: {result}");
+            if (!result.IsSuccess)
+                Console.WriteLine(result.ErrorReason);
+            if (result.Error.Equals(CommandError.UnmetPrecondition))
+                await context.Channel.SendMessageAsync(result.ErrorReason);
         }
     }
 }
