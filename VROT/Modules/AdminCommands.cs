@@ -33,6 +33,12 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
         public async Task BanMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
+            if (Context.Message.Author == user)
+            {
+                await ReplyAsync("Пошёл нахуй, сам себе банан в жопу не всунешь");
+                return;
+            }
+
             if (user == null)
             {
                 await ReplyAsync("Пользователь не указан");
@@ -56,6 +62,11 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
         public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
+            if (Context.Message.Author == user)
+            {
+                await ReplyAsync("Пошёл нахуй, сам себе **кик** в жопу не всунешь");
+                return;
+            }
 
             if (user == null)
             {
@@ -83,6 +94,12 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
         public async Task Mute(SocketGuildUser user, [Remainder] double time)
         {
+            if (Context.Message.Author == user)
+            {
+                await ReplyAsync("Пошёл нахуй, сам себе **мут** в жопу не всунешь");
+                return;
+            }
+
             if (time > 1000)
             {
                 var builder = new EmbedBuilder();
