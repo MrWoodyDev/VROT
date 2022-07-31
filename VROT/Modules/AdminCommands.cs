@@ -33,7 +33,7 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
         public async Task BanMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
-            if (((Context.User as SocketGuildUser)!).Hierarchy <= user.Hierarchy)
+            if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
             {
                 await ReplyAsync("Вы не можете забанить этого пользователя");
                 return;
@@ -62,7 +62,7 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
         public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
-            if (((Context.User as SocketGuildUser)!).Hierarchy <= user.Hierarchy)
+            if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
             {
                 await ReplyAsync("Вы не можете кикнуть этого пользователя");
                 return;
@@ -94,7 +94,7 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
         public async Task Mute(SocketGuildUser user, [Remainder] double time)
         {
-            if (((Context.User as SocketGuildUser)!).Hierarchy <= user.Hierarchy)
+            if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
             {
                 await ReplyAsync("Вы не можете замутить этого пользователя");
                 return;
