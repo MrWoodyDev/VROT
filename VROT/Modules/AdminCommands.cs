@@ -51,7 +51,10 @@ namespace VROT.Modules
             }
 
             var embed = new VrotEmbedBuilder()
+                .WithAuthor(Context.Client.CurrentUser)
+                .WithFooter(footer => footer.Text = Context.User.Username)
                 .WithDescription($":white_check_mark: {user.Mention}получил банан\n**Причина :** {reason}")
+                .WithCurrentTimestamp()
                 .Build();
 
             await ReplyAsync(embed: embed);
