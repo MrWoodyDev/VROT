@@ -60,6 +60,38 @@ namespace VROT.Modules
 
             await ReplyAsync($"**Activity:** {activity.Activity}\n**Participants:** {activity.Participants}\n**Type:** {activity.Type}\n**Price:** {activity.Price}\n**Accessibility:** {activity.Accessibility}");
         }
+
+
+        [Command("ball")]
+        [Alias("шар")]
+        public async Task Ball([Remainder] string ask = null)
+        {
+            int randNum = 0;
+            Random random = new Random();
+            randNum = random.Next(1, 7);
+
+            switch (randNum)
+            {
+                case 1:
+                    await Context.Message.ReplyAsync("Да");
+                    break;
+                case 2:
+                    await Context.Message.ReplyAsync("Нет");
+                    break;
+                case 3:
+                    await Context.Message.ReplyAsync("Возможно да");
+                    break;
+                case 4:
+                    await Context.Message.ReplyAsync("Возможно нет");
+                    break;
+                case 5:
+                    await Context.Message.ReplyAsync("Иди нахуй");
+                    break;
+                case 6:
+                    await Context.Message.ReplyAsync("За небольшую оплату, можешь пойти нахуй");
+                    break;
+            }
+        }
     }
 }
 
