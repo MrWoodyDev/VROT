@@ -30,6 +30,9 @@ namespace VROT.Models
 
         [JsonProperty("accessibility")]
         public double Accessibility { get; set; }
+
+        [JsonProperty("image")]
+        public string? Image { get; set; }
     }
 
     public partial class Event
