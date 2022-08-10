@@ -1,7 +1,4 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using VROT.Common;
+﻿using Discord.Commands;
 using VROT.Models;
 
 namespace VROT.Modules
