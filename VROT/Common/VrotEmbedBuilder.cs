@@ -9,7 +9,7 @@ namespace VROT.Common
         /// </summary>
         public VrotEmbedBuilder()
         {
-            WithColor(new Color(238, 62, 75));
+            WithColor(new Color(44, 47, 51));
         }
     }
 }
