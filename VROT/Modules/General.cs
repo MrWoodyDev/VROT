@@ -18,7 +18,7 @@ namespace VROT.Modules
         [Alias("p")]
         public async Task PingAsync()
         {
-            await Context.Message.ReplyAsync($"Вставай заебал");
+            await Context.Message.ReplyAsync($"Вставай");
             await Context.Channel.DeleteMessageAsync(Context.Message.Id);
         }
 

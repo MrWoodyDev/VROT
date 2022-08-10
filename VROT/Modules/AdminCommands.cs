@@ -8,7 +8,7 @@ namespace VROT.Modules
     public class AdminCommands : ModuleBase<SocketCommandContext>
     {
         [Command("say")]
-        [RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав админа, идите нахуй)0))")]
+        [RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав администратора")]
         public async Task EchoAsync([Remainder] string text)
         {
             await Context.Channel.SendMessageAsync(text);
@@ -16,7 +16,7 @@ namespace VROT.Modules
         }
 
         [Command("clear")]
-        [RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав админа, идите нахуй)0))")]
+        [RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав администратора")]
         public async Task Clear(int amount)
         {
             IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
