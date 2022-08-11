@@ -93,7 +93,7 @@ namespace VROT.Modules
         [Command("mute")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
-        public async Task Mute(SocketGuildUser user, [Remainder] double time)
+        public async Task Mute(SocketGuildUser user = null, int time = 0, string units = null, string reason = null)
         {
             if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
             {
@@ -101,27 +101,58 @@ namespace VROT.Modules
                 return;
             }
 
-            if (time > 1000)
+            if (user == null)
             {
-                var builder = new EmbedBuilder();
-                builder.WithAuthor(Context.Client.CurrentUser);
-                builder.WithFooter(footer => footer.Text = Context.User.Username);
-                builder.WithTitle("**Oh, no!**");
-                builder.AddField("Error", "Максимальное время мута: 1000 минут", true);
-                builder.WithCurrentTimestamp();
-                await ReplyAsync(embed: builder.Build());
+                await ReplyAsync("Пользователь не указан");
+                return;
             }
-            else
+
+            if (reason == null)
             {
-                var builder = new EmbedBuilder();
-                builder.WithAuthor(Context.Client.CurrentUser);
-                builder.WithFooter(footer => footer.Text = Context.User.Username);
-                builder.WithTitle("**Успешно!**");
-                builder.WithDescription($"{user.Mention} замучен на {time} минут");
-                builder.WithCurrentTimestamp();
-                await ReplyAsync(embed: builder.Build());
-                await user.SetTimeOutAsync(TimeSpan.FromMinutes(time));
-                await Context.Channel.DeleteMessageAsync(Context.Message.Id);
+                reason = "Причина не указана";
+            }
+
+            switch (units)
+            {
+                case "min":
+                {
+                    var embed = new VrotEmbedBuilder()
+                        .WithAuthor(Context.Client.CurrentUser)
+                        .WithFooter(footer => footer.Text = Context.User.Username)
+                        .WithDescription($":white_check_mark: {user.Mention} получил мут на {time} минут \n**Причина :** {reason}")
+                        .WithCurrentTimestamp()
+                        .Build();
+
+                        await ReplyAsync(embed: embed);
+                    await user.SetTimeOutAsync(TimeSpan.FromMinutes(time));
+                    break;
+                }
+                case "h":
+                {
+                    var embed = new VrotEmbedBuilder()
+                        .WithAuthor(Context.Client.CurrentUser)
+                        .WithFooter(footer => footer.Text = Context.User.Username)
+                        .WithDescription($":white_check_mark: {user.Mention} получил мут на {time} часов \n**Причина :** {reason}")
+                        .WithCurrentTimestamp()
+                        .Build();
+
+                        await ReplyAsync(embed: embed);
+                    await user.SetTimeOutAsync(TimeSpan.FromHours(time));
+                    break;
+                }
+                case "d":
+                {
+                    var embed = new VrotEmbedBuilder()
+                        .WithAuthor(Context.Client.CurrentUser)
+                        .WithFooter(footer => footer.Text = Context.User.Username)
+                        .WithDescription($":white_check_mark: {user.Mention} получил мут на {time} дней \n**Причина :** {reason}")
+                        .WithCurrentTimestamp()
+                        .Build();
+
+                        await ReplyAsync(embed: embed);
+                    await user.SetTimeOutAsync(TimeSpan.FromDays(time));
+                    break;
+                }
             }
         }
     }
