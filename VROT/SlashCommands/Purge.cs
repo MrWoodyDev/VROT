@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using Discord.Interactions;
 using VROT.Common;
-using VROT.Logger;
 
 namespace VROT.SlashCommands
 {

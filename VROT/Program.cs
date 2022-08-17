@@ -8,10 +8,9 @@ using Discord.Commands;
 using Discord.WebSocket;
 using VROT.Services;
 
-
 namespace VROT
 {
-  public class Program
+    public class Program
     {
         public static async Task Main()
         {
