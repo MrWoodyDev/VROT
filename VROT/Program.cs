@@ -59,6 +59,8 @@ namespace VROT
                 {
                     services
                         .AddHostedService<CommandHandler>()
+                        .AddHostedService<InteractionHandler>()
+                        .AddHostedService<BotStatusService>()
                         .AddHttpClient();
                 })
                 .UseConsoleLifetime();
