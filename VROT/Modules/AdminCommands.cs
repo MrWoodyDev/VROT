@@ -91,10 +91,15 @@ namespace VROT.Modules
         }
 
         [Command("mute")]
-        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireBotPermission(GuildPermission.Administrator)]
         [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
-        public async Task Mute(SocketGuildUser user = null, int time = 0, string units = null, string reason = null)
+        public async Task Mute(SocketGuildUser user = null, int time = 0, string units = null, [Remainder] string reason = null)
         {
+            var timeOutDate = DateTime.Now;
+            var minutes = timeOutDate.AddMinutes(time).ToString("f");
+            var hours = timeOutDate.AddHours(time).ToString("f");
+            var days = timeOutDate.AddDays(time).ToString("f");
+
             if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
             {
                 await ReplyAsync("Вы не можете замутить этого пользователя");
@@ -115,44 +120,56 @@ namespace VROT.Modules
             switch (units)
             {
                 case "min":
-                {
-                    var embed = new VrotEmbedBuilder()
-                        .WithAuthor(Context.Client.CurrentUser)
-                        .WithFooter(footer => footer.Text = Context.User.Username)
-                        .WithDescription($":white_check_mark: {user.Mention} получил мут на {time} минут \n**Причина :** {reason}")
-                        .WithCurrentTimestamp()
-                        .Build();
+                    {
+                        var embed = new VrotEmbedBuilder()
+                            .WithTitle("Участник получил наказание")
+                            .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
+                            .AddField("**Причина**", $"{reason}", true)
+                            .AddField("**Наказание будет дейстовать**", $"{time} минут")
+                            .AddField("Ограничения будут сняты", minutes)
+                            .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
+                            .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+                            .WithCurrentTimestamp()
+                            .Build();
 
                         await ReplyAsync(embed: embed);
-                    await user.SetTimeOutAsync(TimeSpan.FromMinutes(time));
-                    break;
-                }
+                        await user.SetTimeOutAsync(TimeSpan.FromMinutes(time));
+                        break;
+                    }
                 case "h":
-                {
-                    var embed = new VrotEmbedBuilder()
-                        .WithAuthor(Context.Client.CurrentUser)
-                        .WithFooter(footer => footer.Text = Context.User.Username)
-                        .WithDescription($":white_check_mark: {user.Mention} получил мут на {time} часов \n**Причина :** {reason}")
-                        .WithCurrentTimestamp()
-                        .Build();
+                    {
+                        var embed = new VrotEmbedBuilder()
+                            .WithTitle("Участник получил наказание")
+                            .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
+                            .AddField("**Причина**", $"{reason}", true)
+                            .AddField("**Наказание будет дейстовать**", $"{time} час")
+                            .AddField("Ограничения будут сняты", hours)
+                            .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
+                            .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+                            .WithCurrentTimestamp()
+                            .Build();
 
                         await ReplyAsync(embed: embed);
-                    await user.SetTimeOutAsync(TimeSpan.FromHours(time));
-                    break;
-                }
+                        await user.SetTimeOutAsync(TimeSpan.FromHours(time));
+                        break;
+                    }
                 case "d":
-                {
-                    var embed = new VrotEmbedBuilder()
-                        .WithAuthor(Context.Client.CurrentUser)
-                        .WithFooter(footer => footer.Text = Context.User.Username)
-                        .WithDescription($":white_check_mark: {user.Mention} получил мут на {time} дней \n**Причина :** {reason}")
-                        .WithCurrentTimestamp()
-                        .Build();
+                    {
+                        var embed = new VrotEmbedBuilder()
+                            .WithTitle("Участник получил наказание")
+                            .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
+                            .AddField("**Причина**", $"{reason}", true)
+                            .AddField("**Наказание будет дейстовать**", $"{time} дней")
+                            .AddField("Ограничения будут сняты", days)
+                            .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
+                            .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+                            .WithCurrentTimestamp()
+                            .Build();
 
                         await ReplyAsync(embed: embed);
-                    await user.SetTimeOutAsync(TimeSpan.FromDays(time));
-                    break;
-                }
+                        await user.SetTimeOutAsync(TimeSpan.FromDays(time));
+                        break;
+                    }
             }
         }
     }
