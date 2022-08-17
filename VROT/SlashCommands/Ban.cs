@@ -6,17 +6,17 @@ using VROT.Common;
 
 namespace VROT.SlashCommands
 {
-    public class Kick : InteractionModuleBase<SocketInteractionContext>
+    public class Ban : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("kick", "Кикнуть пользователя")]
-        [Discord.Commands.RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
-        public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
+        [SlashCommand("ban", "Выдать бан пользователю")]
+        [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
+        public async Task BanMember(SocketGuildUser user = null, [Remainder] string? reason = null)
         {
             if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
             {
                 EmbedBuilder builder = new EmbedBuilder()
                     .WithTitle($":x: Ошибка!")
-                    .WithDescription("Вы не можете кикнуть\nэтого пользователя")
+                    .WithDescription("Вы не можете выдать бан\nэтому пользователю")
                     .WithCurrentTimestamp()
                     .WithColor(Color.DarkRed)
                     .WithFooter(footer =>
@@ -36,10 +36,10 @@ namespace VROT.SlashCommands
                 .WithFooter(footer =>
                 {
                     footer
-                    .WithText("Module: Kick")
+                    .WithText("Module: Ban")
                     .WithIconUrl(Context.Guild.IconUrl);
                 })
-                .WithDescription($"Бан\n/kick `[пользователь]` `[причина]`")
+                .WithDescription($"Бан\n/ban `[пользователь]` `[причина]`")
                 .WithCurrentTimestamp();
                 await ReplyAsync(embed: builder.Build());
 
@@ -53,10 +53,10 @@ namespace VROT.SlashCommands
                 .WithFooter(footer =>
                 {
                     footer
-                    .WithText("Module: Kick")
+                    .WithText("Module: Ban")
                     .WithIconUrl(Context.Guild.IconUrl);
                 })
-                .WithDescription($"Бан\n/kick `[пользователь]` `[причина]`")
+                .WithDescription($"Бан\n/ban `[пользователь]` `[причина]`")
                 .WithCurrentTimestamp();
                 await ReplyAsync(embed: builder.Build());
 
@@ -66,11 +66,12 @@ namespace VROT.SlashCommands
             var embed = new VrotEmbedBuilder()
                 .WithAuthor(Context.Client.CurrentUser)
                 .WithFooter(footer => footer.Text = Context.User.Username)
-                .WithDescription($":white_check_mark: {user.Mention}был кикнут\n**Причина :** {reason}")
-                .WithCurrentTimestamp();
+                .WithDescription($":white_check_mark: {user.Mention}получил банан\n**Причина :** {reason}")
+                .WithCurrentTimestamp()
+                .Build();
 
-            await ReplyAsync(embed: embed.Build());
-            await user.KickAsync(reason);
+            await ReplyAsync(embed: embed);
+            await Context.Guild.AddBanAsync(user, 0, reason);
         }
     }
 }
