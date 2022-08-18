@@ -31,7 +31,7 @@ namespace VROT
                 x.AddConsole();
                 x.SetMinimumLevel(LogLevel.Debug);
             });
-            builder.Host.ConfigureDiscordHost((context, config) =>
+                builder.Host.ConfigureDiscordHost((context, config) => 
                 {
                     config.SocketConfig = new DiscordSocketConfig
                     {
@@ -44,19 +44,19 @@ namespace VROT
                     };
 
                     config.Token = context.Configuration["Token"];
-                })
-                .UseCommandService((context, config) =>
+                });
+                builder.Host.UseCommandService((context, config) =>
                 {
                     config.CaseSensitiveCommands = false;
                     config.LogLevel = LogSeverity.Debug;
                     config.DefaultRunMode = RunMode.Sync;
-                })
-                .UseInteractionService((context, config) =>
+                });
+                builder.Host.UseInteractionService((context, config) =>
                 {
                     config.LogLevel = LogSeverity.Info;
                     config.UseCompiledLambda = false;
-                })
-                .ConfigureServices((context, services) =>
+                });
+                builder.Host.ConfigureServices((context, services) =>
                 {
                     services.AddHostedService<CommandHandler>();
                     services.AddHostedService<InteractionHandler>();
@@ -65,8 +65,8 @@ namespace VROT
                     services.AddControllers();
                     services.AddEndpointsApiExplorer();
                     services.AddSwaggerGen();
-                })
-                .UseConsoleLifetime();
+                });
+                builder.Host.UseConsoleLifetime();
 
             await using var host = builder.Build();
 

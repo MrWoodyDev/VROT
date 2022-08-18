@@ -39,7 +39,6 @@ namespace VROT.Modules
                     .WithCurrentTimestamp()
                     .Build();
 
-                await Context.Channel.DeleteMessageAsync(Context.Message.Id);
                 await ReplyAsync(embed: embed);
             }
         }
