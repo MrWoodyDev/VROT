@@ -64,11 +64,13 @@ namespace VROT
                     services.AddHttpClient();
                     services.AddControllers();
                     services.AddEndpointsApiExplorer();
-                    services.AddSwaggerGen();
+                    services.AddSwaggerGen(); 
+
                 });
                 builder.Host.UseConsoleLifetime();
 
             await using var host = builder.Build();
+
 
             host.UseSwagger();
             host.UseSwaggerUI(x => x.DisplayOperationId());

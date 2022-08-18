@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 
-
 namespace VROT.Models
 {
     internal class ParseStringConverter : JsonConverter
