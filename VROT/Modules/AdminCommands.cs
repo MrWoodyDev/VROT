@@ -49,9 +49,11 @@ namespace VROT.Modules
             }
 
             var embed = new VrotEmbedBuilder()
-                .WithAuthor(Context.Client.CurrentUser)
-                .WithFooter(footer => footer.Text = Context.User.Username)
-                .WithDescription($":white_check_mark: {user.Mention}получил банан\n**Причина :** {reason}")
+                .WithTitle("Участник был забанен")
+                .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
+                .AddField("**Причина**", $"{reason}", true)
+                .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
+                .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
                 .WithCurrentTimestamp()
                 .Build();
 
@@ -81,12 +83,15 @@ namespace VROT.Modules
             }
 
             var embed = new VrotEmbedBuilder()
-                .WithAuthor(Context.Client.CurrentUser)
-                .WithFooter(footer => footer.Text = Context.User.Username)
-                .WithDescription($":white_check_mark: {user.Mention}был кикнут\n**Причина :** {reason}")
-                .WithCurrentTimestamp();
+                .WithTitle("Участник был кикнут")
+                .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
+                .AddField("**Причина**", $"{reason}", true)
+                .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
+                .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+                .WithCurrentTimestamp()
+                .Build();
 
-            await ReplyAsync(embed: embed.Build());
+            await ReplyAsync(embed: embed);
             await user.KickAsync(reason);
         }
 
@@ -119,7 +124,7 @@ namespace VROT.Modules
 
             switch (units)
             {
-                case "min":
+                case "m":
                     {
                         var embed = new VrotEmbedBuilder()
                             .WithTitle("Участник получил наказание")
