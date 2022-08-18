@@ -7,6 +7,7 @@ using Discord.Addons.Hosting;
 using Discord.Commands;
 using Discord.WebSocket;
 using VROT.Services;
+using Microsoft.AspNetCore.Builder;
 
 namespace VROT
 {
@@ -14,22 +15,23 @@ namespace VROT
     {
         public static async Task Main()
         {
-            var builder = new HostBuilder()
-                .ConfigureAppConfiguration(x =>
-                {
-                    var configuration = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsetting.json", false, true)
-                        .Build();
+            var builder = WebApplication.CreateBuilder();
 
-                    x.AddConfiguration(configuration);
-                })
-                .ConfigureLogging(x =>
-                {
-                    x.AddConsole();
-                    x.SetMinimumLevel(LogLevel.Debug);
-                })
-                .ConfigureDiscordHost((context, config) =>
+            builder.Host.ConfigureAppConfiguration(x =>
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsetting.json", false, true)
+                    .Build();
+
+                x.AddConfiguration(configuration);
+            });
+            builder.Host.ConfigureLogging(x =>
+            {
+                x.AddConsole();
+                x.SetMinimumLevel(LogLevel.Debug);
+            });
+            builder.Host.ConfigureDiscordHost((context, config) =>
                 {
                     config.SocketConfig = new DiscordSocketConfig
                     {
@@ -56,19 +58,23 @@ namespace VROT
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services
-                        .AddHostedService<CommandHandler>()
-                        .AddHostedService<InteractionHandler>()
-                        .AddHostedService<BotStatusService>()
-                        .AddHttpClient();
+                    services.AddHostedService<CommandHandler>();
+                    services.AddHostedService<InteractionHandler>();
+                    services.AddHostedService<BotStatusService>();
+                    services.AddHttpClient();
+                    services.AddControllers();
+                    services.AddEndpointsApiExplorer();
+                    services.AddSwaggerGen();
                 })
                 .UseConsoleLifetime();
 
-            var host = builder.Build();
-            using (host)
-            {
-                await host.RunAsync();
-            }
+            await using var host = builder.Build();
+
+            host.UseSwagger();
+            host.UseSwaggerUI(x => x.DisplayOperationId());
+            host.MapControllers();
+
+            await host.RunAsync();
         }
     }
 }
