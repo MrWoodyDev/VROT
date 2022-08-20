@@ -1,0 +1,50 @@
+﻿using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Tenor;
+using VROT.Models;
+
+namespace VROT.Services
+{
+    internal class TenorService : ITenorService
+    {
+        private readonly TenorClient _tenorClient;
+
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public TenorService(IHttpClientFactory httpClientFactory, IOptions<TenorSetttings> options)
+        {
+            _httpClientFactory = httpClientFactory;
+            _tenorClient = new TenorClient(_httpClientFactory.CreateClient(), options.Value.ApiKey, options.Value.ClientKey);
+        }
+
+        public async Task<string?> GetRandomGifUrlAsync(string search)
+        {
+            var gifsRequest = GetDefaultGifsRequest();
+            gifsRequest.SearchQuery = search;
+            gifsRequest.Random = true;
+            gifsRequest.Limit = 1;
+
+            var result = await _tenorClient.SearchAsync(gifsRequest);
+
+            if (result is null)
+                return null;
+
+            return result.Results[0].MediaFormats[FormatType.gif].Url.ToString() ?? null;
+        }
+
+
+        private GetGifsRequest GetDefaultGifsRequest() =>
+            new GetGifsRequest
+            {
+                ContentFilter = ContentFilter.off,
+                AspectRatioRange = AspectRatioRange.all,
+                MediaFilter = new FormatType[] { FormatType.gif, FormatType.mediumgif },
+                Limit = 20,
+                Pos = "0"
+            };
+    }
+}
