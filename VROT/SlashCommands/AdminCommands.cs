@@ -8,6 +8,8 @@ namespace VROT.SlashCommands
 {
     public class AdminCmd : InteractionModuleBase<SocketInteractionContext>
     {
+        [EnabledInDm(false)]
+        [DefaultMemberPermissions(GuildPermission.BanMembers)]
         [SlashCommand("ban", "Выдать бан пользователю")]
         [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
         public async Task BanMember(SocketGuildUser user = null, [Remainder] string? reason = null)
@@ -73,9 +75,10 @@ namespace VROT.SlashCommands
             await ReplyAsync(embed: embed);
             await Context.Guild.AddBanAsync(user, 0, reason);
         } 
-        
+        [EnabledInDm(false)]
+        [DefaultMemberPermissions(GuildPermission.KickMembers)]
         [SlashCommand("kick", "Кикнуть пользователя")]
-        [Discord.Commands.RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
+        [Discord.Commands.RequireUserPermission(GuildPermission.Administrator, ErrorMessage = "У вас нет прав выгонять учатсников")]
         public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
             if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
@@ -173,7 +176,6 @@ namespace VROT.SlashCommands
         }
         
         [SlashCommand("report", "пожаловаться на пользователя")]
-        [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав выдавать бан!")]
         public async Task ButtomCommandHandler(SocketGuildUser? user = null, string reason = null)
         {
             if (user == null)
@@ -241,6 +243,7 @@ namespace VROT.SlashCommands
 
         }
         [ComponentInteraction("button1:*")]
+        [Discord.Interactions.RequireUserPermission(GuildPermission.BanMembers)]
         public async Task HandleButton2(ulong userid)
         {
             var component = new ComponentBuilder();
