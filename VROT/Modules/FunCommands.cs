@@ -10,25 +10,16 @@ namespace VROT.Modules
 {
     public class FunCommands : ModuleBase<SocketCommandContext>
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
         private readonly ITenorService _tenorService;
 
-        public FunCommands(IHttpClientFactory httpClientFactory, ITenorService tenorService)
+        public FunCommands(ITenorService tenorService)
         {
-            _httpClientFactory = httpClientFactory;
             _tenorService = tenorService;
         }
 
         [Command("kill")]
         public async Task Kill(SocketGuildUser user = null)
         {
-            //var httpClient = _httpClientFactory.CreateClient();
-            //var response = await httpClient.GetStringAsync("https://miss.perssbest.repl.co/api/v2/kill");
-            //var kill = Event.FromJson(response);
-
-            var tenorGif = await _tenorService.GetRandomGifUrlAsync("kill");
-
             if (user == null)
             {
                 var embed = new VrotEmbedBuilder()
@@ -39,6 +30,8 @@ namespace VROT.Modules
             }
             else
             {
+                var tenorGif = await _tenorService.GetRandomGifUrlAsync("kill");
+
                 var embed = new VrotEmbedBuilder()
                     .WithDescription($"**{Context.Message.Author.Username}** убил **{user.Username}**")
                     .WithImageUrl(tenorGif)
