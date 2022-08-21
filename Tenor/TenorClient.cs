@@ -22,6 +22,9 @@ namespace Tenor
 
         public async Task<GifsResponse> SearchAsync(GetGifsRequest request)
         {
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+
             var parametersDictionary = request.ToQueryParametersDictionary();
 
             var response = await _httpClient.GetAsync(BuildUrlQuery("search", parametersDictionary));
@@ -29,7 +32,7 @@ namespace Tenor
             var responseJson = await response.Content.ReadAsStringAsync();
             var gifsResponse = JsonConvert.DeserializeObject<GifsResponse>(responseJson);
 
-            return gifsResponse;
+            return gifsResponse; 
         }
 
         private string BuildUrlQuery(string endpoint, IDictionary<string, string> queryParameters)

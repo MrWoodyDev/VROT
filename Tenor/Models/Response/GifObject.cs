@@ -32,7 +32,7 @@ namespace Tenor
         public bool HasCaption { get; set; }
 
         [JsonProperty("flags")]
-        public string Flags { get; set; }
+        public string[] Flags { get; set; }
 
         [JsonProperty("bg_color")]
         public string BgColor { get; set; }
