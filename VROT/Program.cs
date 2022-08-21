@@ -8,6 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using VROT.Services;
 using Microsoft.AspNetCore.Builder;
+using VROT.Models;
 
 namespace VROT
 {
@@ -58,9 +59,11 @@ namespace VROT
                 });
                 builder.Host.ConfigureServices((context, services) =>
                 {
+                    services.Configure<TenorSetttings>(context.Configuration.GetSection("Tenor"));
                     services.AddHostedService<CommandHandler>();
                     services.AddHostedService<InteractionHandler>();
                     services.AddHostedService<BotStatusService>();
+                    services.AddSingleton<ITenorService, TenorService>();
                     services.AddHttpClient();
                     services.AddControllers();
                     services.AddEndpointsApiExplorer();
