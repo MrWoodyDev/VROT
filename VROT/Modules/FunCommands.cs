@@ -48,23 +48,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.SlapGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** ударил **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** ударил **{user.Username}**", request);
         }
 
         [Command("kiss")]
@@ -72,23 +56,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.KissGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** поцеловал **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** поцеловал **{user.Username}**", request);
         }
 
         [Command("feed")]
@@ -96,23 +64,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.FeedGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** покормил **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** покормил **{user.Username}**", request);
         }
 
         [Command("hug")]
@@ -120,23 +72,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.HugGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** обнял **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** обнял **{user.Username}**", request);
         }
 
         [Command("poke")]
@@ -144,23 +80,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.PokeGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** тыкнул в **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** тыкнул в **{user.Username}**", request);
         }
 
         [Command("cuddle")]
@@ -168,23 +88,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.CuddleGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** прижимается к **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** прижимается к **{user.Username}**", request);
         }
 
         [Command("pat")]
@@ -192,23 +96,7 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.PatGif();
 
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** погладил **{user.Username}**")
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** погладил **{user.Username}**", request);
         }
 
         [Command("tickle")]
@@ -216,6 +104,11 @@ namespace VROT.Modules
         {
             Request request = await NekoClient.Action_v3.TickleGif();
 
+            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** щекочет **{user.Username}**", request);
+        }
+
+        private async Task RunCommandAsync(SocketGuildUser user, string description, Request request)
+        {
             if (user == null)
             {
                 var embed = new VrotEmbedBuilder()
@@ -227,7 +120,7 @@ namespace VROT.Modules
             else
             {
                 var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** щекочет **{user.Username}**")
+                    .WithDescription(description)
                     .WithImageUrl(request.ImageUrl)
                     .WithCurrentTimestamp()
                     .Build();
