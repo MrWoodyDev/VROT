@@ -17,7 +17,14 @@ namespace VROT.Services
             await Client.WaitForReadyAsync(stoppingToken);
             Logger.LogInformation("Client is ready!");
 
-            await Client.SetActivityAsync(new Game("I love .NET"));
+            while (true)
+            {
+                await Client.SetGameAsync("I love Discord");
+                Thread.Sleep(5000);
+                await Client.SetGameAsync("I love Discord.NET");
+                Thread.Sleep(5000);
+
+            }
         }
     }
 }
