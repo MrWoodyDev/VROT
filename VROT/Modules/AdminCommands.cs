@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System.Net.NetworkInformation;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using VROT.Common;
@@ -22,42 +23,14 @@ namespace VROT.Modules
             IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
             await ((ITextChannel)Context.Channel).DeleteMessagesAsync(messages);
             const int delay = 3000;
-            IUserMessage m = await ReplyAsync($"I have deleted {amount} messages for ya. :)");
             await Task.Delay(delay);
-            await m.DeleteAsync();
         }
 
         [Command("ban")]
         [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
         public async Task BanMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
-            if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
-            {
-                await ReplyAsync("Вы не можете забанить этого пользователя");
-                return;
-            }
-
-            if (user == null)
-            {
-                await ReplyAsync("Пользователь не указан");
-                return;
-            }
-
-            if (reason == null)
-            {
-                reason = "Причина не указана";
-            }
-
-            var embed = new VrotEmbedBuilder()
-                .WithTitle("Участник был забанен")
-                .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
-                .AddField("**Причина**", $"{reason}", true)
-                .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
-                .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
-                .WithCurrentTimestamp()
-                .Build();
-
-            await ReplyAsync(embed: embed);
+            await RunAdminCommands(user,"Участник получил бан", reason);
             await Context.Guild.AddBanAsync(user, 0, reason);
         }
 
@@ -65,55 +38,41 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
         public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
-            if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
-            {
-                await ReplyAsync("Вы не можете кикнуть этого пользователя");
-                return;
-            }
-
-            if (user == null)
-            {
-                await ReplyAsync("Пользователь не указан");
-                return;
-            }
-
-            if (reason == null)
-            {
-                reason = "Причина не указана";
-            }
-
-            var embed = new VrotEmbedBuilder()
-                .WithTitle("Участник был кикнут")
-                .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
-                .AddField("**Причина**", $"{reason}", true)
-                .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
-                .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
-                .WithCurrentTimestamp()
-                .Build();
-
-            await ReplyAsync(embed: embed);
+            await RunAdminCommands(user,"Участник получил наказание", reason);
             await user.KickAsync(reason);
         }
 
         [Command("mute")]
-        [RequireBotPermission(GuildPermission.Administrator)]
-        [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
-        public async Task Mute(SocketGuildUser user = null, int time = 0, string units = null, [Remainder] string reason = null)
-        {
-            var timeOutDate = DateTime.Now;
-            var minutes = timeOutDate.AddMinutes(time).ToString("f");
-            var hours = timeOutDate.AddHours(time).ToString("f");
-            var days = timeOutDate.AddDays(time).ToString("f");
 
-            if (Context.User is not SocketGuildUser guildUser || guildUser.Hierarchy <= user.Hierarchy)
-            {
-                await ReplyAsync("Вы не можете замутить этого пользователя");
-                return;
-            }
+        [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
+        public async Task Mute(SocketGuildUser user = null, string timeMute = "1m", [Remainder] string reason = null)
+        {
+            var units = timeMute.Last().ToString();
+            int.TryParse(timeMute.Substring(0, timeMute.Length - 1), out var time);
+
+            var timeOutDate = DateTime.Now;
 
             if (user == null)
             {
-                await ReplyAsync("Пользователь не указан");
+                await ReplyAsync(":x: Пользователь не указан");
+                return;
+            }
+
+            if (Context.Message.Author == user)
+            {
+                await ReplyAsync($":x: **{Context.Message.Author.Username}**, вы не можете себе выдать наказание");
+                return;
+            }
+
+            if (((Context.User as SocketGuildUser)!).Hierarchy <= user.Hierarchy)
+            {
+                await ReplyAsync($":x: **{Context.Message.Author.Username}**, ваша роль ниже чем у пользователя **{user.Username}**");
+                return;
+            }
+
+            if (Context.Guild.GetUser(Context.Client.CurrentUser.Id).Hierarchy <= user.Hierarchy)
+            {
+                await ReplyAsync($":x: **{Context.Message.Author.Username}**, роль бота ниже чем у пользователя **{user.Username}**");
                 return;
             }
 
@@ -126,6 +85,8 @@ namespace VROT.Modules
             {
                 case "m":
                     {
+                        var minutes = timeOutDate.AddMinutes(time).ToString("f");
+
                         var embed = new VrotEmbedBuilder()
                             .WithTitle("Участник получил наказание")
                             .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
@@ -143,6 +104,8 @@ namespace VROT.Modules
                     }
                 case "h":
                     {
+                        var hours = timeOutDate.AddHours(time).ToString("f");
+
                         var embed = new VrotEmbedBuilder()
                             .WithTitle("Участник получил наказание")
                             .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
@@ -160,6 +123,8 @@ namespace VROT.Modules
                     }
                 case "d":
                     {
+                        var days = timeOutDate.AddDays(time).ToString("f");
+
                         var embed = new VrotEmbedBuilder()
                             .WithTitle("Участник получил наказание")
                             .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
@@ -176,6 +141,49 @@ namespace VROT.Modules
                         break;
                     }
             }
+        }
+
+        private async Task RunAdminCommands(SocketGuildUser user = null, string title = null, [Remainder] string reason = null)
+        {
+            if (user == null)
+            {
+                await ReplyAsync(":x: Пользователь не указан");
+                return;
+            }
+
+            if (Context.Message.Author == user)
+            {
+                await ReplyAsync($":x: **{Context.Message.Author.Username}**, вы не можете себе выдать наказание");
+                return;
+            }
+
+            if (((Context.User as SocketGuildUser)!).Hierarchy <= user.Hierarchy)
+            {
+                await ReplyAsync($":x: **{Context.Message.Author.Username}**, ваша роль ниже чем у пользователя **{user.Username}**");
+                return;
+            }
+
+            if (Context.Guild.GetUser(Context.Client.CurrentUser.Id).Hierarchy <= user.Hierarchy)
+            {
+                await ReplyAsync($":x: **{Context.Message.Author.Username}**, роль бота ниже чем у пользователя **{user.Username}**");
+                return;
+            }
+
+            if (reason == null)
+            {
+                reason = "Причина не указана";
+            }
+
+            var embed = new VrotEmbedBuilder()
+                .WithTitle(title)
+                .AddField("**Модератор**", $"**{Context.Message.Author.Username}**#{Context.Message.Author.Discriminator}", true)
+                .AddField("**Причина**", $"{reason}", true)
+                .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
+                .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+                .WithCurrentTimestamp()
+                .Build();
+
+            await ReplyAsync(embed: embed);
         }
     }
 }

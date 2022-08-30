@@ -66,7 +66,7 @@ namespace VROT.Modules
         {
             if (ask == null)
             {
-                await Context.Message.ReplyAsync("**Напишите вопрос**");
+                await ReplyAsync("**Напишите вопрос**");
             }
             else
             {
@@ -77,22 +77,22 @@ namespace VROT.Modules
                 switch (randNum)
                 {
                     case 1:
-                        await Context.Message.ReplyAsync("Да");
+                        await ReplyAsync($"**{Context.Message.Author.Username}**, да");
                         break;
                     case 2:
-                        await Context.Message.ReplyAsync("Нет");
+                        await ReplyAsync($"**{Context.Message.Author.Username}**, нет");
                         break;
                     case 3:
-                        await Context.Message.ReplyAsync("Возможно да");
+                        await ReplyAsync($"**{Context.Message.Author.Username}**, возможно да");
                         break;
                     case 4:
-                        await Context.Message.ReplyAsync("Возможно нет");
+                        await ReplyAsync($"**{Context.Message.Author.Username}**, возможно нет");
                         break;
                     case 5:
-                        await Context.Message.ReplyAsync("Иди нахуй");
+                        await ReplyAsync($"**{Context.Message.Author.Username}**, иди нахуй");
                         break;
                     case 6:
-                        await Context.Message.ReplyAsync("За небольшую оплату, можешь пойти нахуй");
+                        await ReplyAsync($"**{Context.Message.Author.Username}**, за небольшую оплату, можешь пойти нахуй");
                         break;
                 }
             }

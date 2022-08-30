@@ -23,17 +23,21 @@ namespace VROT.Services
 
         public async Task<string?> GetRandomGifUrlAsync(string search)
         {
+            int randaomGif = 0;
+            Random random = new Random();
+            randaomGif = random.Next(0, 49);
+
             var gifsRequest = GetDefaultGifsRequest();
             gifsRequest.SearchQuery = search;
             gifsRequest.Random = true;
-            gifsRequest.Limit = 1;
+            gifsRequest.Limit = 50;
 
             var result = await _tenorClient.SearchAsync(gifsRequest);
 
             if (result is null)
                 return null;
 
-            return result.Results[0].MediaFormats[FormatType.gif].Url.ToString() ?? null;
+            return result.Results[randaomGif].MediaFormats[FormatType.gif].Url.ToString() ?? null;
         }
 
 

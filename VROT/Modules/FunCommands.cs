@@ -1,8 +1,5 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
-using NekosSharp;
-using VROT.Models;
 using VROT.Common;
 using VROT.Services;
 
@@ -18,97 +15,67 @@ namespace VROT.Modules
         }
 
         [Command("kill")]
-        public async Task Kill(SocketGuildUser user = null)
+        public async Task Kill(SocketGuildUser user = null!)
         {
-            if (user == null)
-            {
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription("**Укажите пользователя**")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
-            else
-            {
-                var tenorGif = await _tenorService.GetRandomGifUrlAsync("kill");
-
-                var embed = new VrotEmbedBuilder()
-                    .WithDescription($"**{Context.Message.Author.Username}** убил **{user.Username}**")
-                    .WithImageUrl(tenorGif)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync(embed: embed);
-            }
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** убил **{user.Username}**", "anime kill");
         }
 
-        public static NekosSharp.NekoClient NekoClient = new NekoClient("VROT");
-
         [Command("slap")]
-        public async Task Slap(SocketGuildUser user = null)
+        public async Task Slap(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.SlapGif();
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** дал пощёчину **{user.Username}**", "anime slap");
+        }
 
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** ударил **{user.Username}**", request);
+        [Command("punch")]
+        public async Task Punch(SocketGuildUser user = null!)
+        {
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** дал пизды **{user.Username}**", "anime punch");
         }
 
         [Command("kiss")]
-        public async Task Kiss(SocketGuildUser user = null)
+        public async Task Kiss(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.KissGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** поцеловал **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** поцеловал **{user.Username}**", "anime kiss");
         }
 
         [Command("feed")]
-        public async Task Feed(SocketGuildUser user = null)
+        public async Task Feed(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.FeedGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** покормил **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** покормил **{user.Username}**", "anime feed");
         }
 
         [Command("hug")]
-        public async Task Hug(SocketGuildUser user = null)
+        public async Task Hug(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.HugGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** обнял **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** обнял **{user.Username}**", "anime hug");
         }
 
         [Command("poke")]
-        public async Task Poke(SocketGuildUser user = null)
+        public async Task Poke(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.PokeGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** тыкнул в **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** тыкнул в **{user.Username}**", "anime poke");
         }
 
         [Command("cuddle")]
-        public async Task Cuddle(SocketGuildUser user = null)
+        public async Task Cuddle(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.CuddleGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** прижимается к **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** прижимается к **{user.Username}**", "anime cuddle");
         }
 
         [Command("pat")]
-        public async Task Pat(SocketGuildUser user = null)
+        public async Task Pat(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.PatGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** погладил **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** погладил **{user.Username}**", "anime pat");
         }
 
         [Command("tickle")]
-        public async Task Tickle(SocketGuildUser user = null)
+        public async Task Tickle(SocketGuildUser user = null!)
         {
-            Request request = await NekoClient.Action_v3.TickleGif();
-
-            await RunCommandAsync(user, $"**{Context.Message.Author.Username}** щекочет **{user.Username}**", request);
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** щекочет **{user.Username}**", "anime tickle");
         }
 
-        private async Task RunCommandAsync(SocketGuildUser user, string description, Request request)
-        {
+       private async Task RunGifCommandAsync(SocketGuildUser user, string description, string gifSearch)
+       {
             if (user == null)
             {
                 var embed = new VrotEmbedBuilder()
@@ -119,13 +86,14 @@ namespace VROT.Modules
             }
             else
             {
+                var gifUrl = await _tenorService.GetRandomGifUrlAsync(gifSearch);
+
                 var embed = new VrotEmbedBuilder()
                     .WithDescription(description)
-                    .WithImageUrl(request.ImageUrl)
-                    .WithCurrentTimestamp()
+                    .WithImageUrl(gifUrl)
                     .Build();
                 await ReplyAsync(embed: embed);
             }
-        }
+       }
     }
 }
