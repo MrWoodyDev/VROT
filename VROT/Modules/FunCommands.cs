@@ -29,7 +29,7 @@ namespace VROT.Modules
         [Command("punch")]
         public async Task Punch(SocketGuildUser user = null!)
         {
-            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** дал пизды **{user.Username}**", "anime punch");
+            await RunGifCommandAsync(user, $"**{Context.Message.Author.Username}** ударил **{user.Username}**", "anime punch");
         }
 
         [Command("kiss")]
