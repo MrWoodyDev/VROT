@@ -1,54 +1,58 @@
-﻿using Discord;
+using Discord;
 using Discord.WebSocket;
 using Discord.Interactions;
+using Microsoft.AspNetCore.DataProtection;
 using VROT.Common;
 
 namespace VROT.SlashCommands
 {
     public class HelpCmd : InteractionModuleBase<SocketInteractionContext>
     {
-        [SlashCommand("help", "help")]
-        public async Task HelpAsync()
+        [SlashCommand("help", "команда help")]
+        public async Task MenuInput()
         {
+            var components = new ComponentBuilder();
+            var select = new SelectMenuBuilder()
+            {
+                CustomId = "menu1",
+                Placeholder = "Выберите категорию..."
+            };
 
-            var menuBuilder = new SelectMenuBuilder()
-                .WithPlaceholder("Выберите категорию")
-                .WithCustomId("menu-1")
-                .WithMinValues(1)
-                .WithMaxValues(1)
-                .AddOption("Модерация", "opt-a", "Команды для удобной модерации сервера")
-                .AddOption("Плюшки", "opt-b", "18+ контент");
+            select.AddOption("test1", "1");
+            select.AddOption("test2", "2");
 
-            var builder = new ComponentBuilder()
-                .WithSelectMenu(menuBuilder);
-
+            components.WithSelectMenu(select);
+            
             var embed = new VrotEmbedBuilder()
                 .WithTitle($"Команды бота")
                 .WithDescription("Список команд бота")
                 .WithCurrentTimestamp()
                 .Build();
-            await ReplyAsync("", embed: embed, components: builder.Build());
-
-            Context.Client.SelectMenuExecuted += MyMenuHandler;
-
+            await ReplyAsync("", embed: embed, components: components.Build());
         }
-        //public async Task MyMenuHandler(SocketMessageComponent arg)
-        //{
-        //    var text = string.Join(", ", arg.Data.Values);
-        //    var embed = new VrotEmbedBuilder()
-        //        .WithTitle($"Хуй")
-        //        .WithDescription("Залупа")
-        //        .WithCurrentTimestamp()
-        //        .Build();
-        //    await arg.RespondAsync(embed: embed, ephemeral: true);
 
-        //}
-
-        public async Task MyMenuHandler(SocketMessageComponent arg)
+        [ComponentInteraction("menu1")]
+        public async Task MenuHandler(string[] selections)
         {
-            var text = string.Join("", arg.Data.Values);
-            await arg.RespondAsync($"{text}", ephemeral: true);
-        }
+            if (selections.First() == "1")
+            {            
+                var embed = new VrotEmbedBuilder()
+                    .WithTitle($"Раздел с модерацией")
+                    .WithDescription("Список команд бота")
+                    .WithCurrentTimestamp()
+                    .Build();
+                await RespondAsync("", embed: embed, ephemeral: true);
+            }
+            if (selections.First() == "2")
+            {
+                var embed = new VrotEmbedBuilder()
+                    .WithTitle($"Раздел с плющками")
+                    .WithDescription("Список команд бота")
+                    .WithCurrentTimestamp()
+                    .Build();
+                await RespondAsync("", embed: embed, ephemeral: true);
+            }
+        }    
+
     }
 }
-
