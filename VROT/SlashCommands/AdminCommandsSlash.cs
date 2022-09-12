@@ -8,6 +8,60 @@ namespace VROT.SlashCommands
 {
     public class AdminCommandsSlash : InteractionModuleBase<SocketInteractionContext>
     {
+        [SlashCommand("verify", "verification")]
+        public async Task EmbedAsync()
+        {
+            var component = new ComponentBuilder();
+            var button = new ButtonBuilder()
+            {
+                Label = "Пройти верефикацию",
+                CustomId = "button1",
+                Style = ButtonStyle.Secondary
+            };
+            component.WithButton(button);
+
+            EmbedBuilder builder = new EmbedBuilder()
+                .WithAuthor("Верификация")
+                .WithColor(Color.Blue)
+                .WithDescription("Добро пожаловать на \n" +
+                                 Context.Guild.Name +
+                                 Environment.NewLine +
+                                 "Чтобы пройти на сервер\nнажмите на соответствующую\nкнопку ниже")
+                .WithThumbnailUrl(Context.Guild.IconUrl)
+                .WithFooter("Верификация");
+            await ReplyAsync("", false, builder.Build(), components: component.Build());
+
+
+        }
+
+        [ComponentInteraction("button1")]
+        public async Task HandleButton()
+        {
+            var component = new ComponentBuilder();
+            await RespondWithModalAsync<HelloModal>("modal_input_demo");
+
+        }
+
+        [ModalInteraction("modal_input_demo")]
+        public async Task ModalResponse(HelloModal modal)
+        {
+            string message = $"{modal.Greeting}";
+
+            AllowedMentions mentions = new();
+            mentions.AllowedTypes = AllowedMentionTypes.Users;
+
+            await RespondAsync(message, allowedMentions: mentions, ephemeral: true);
+        }
+
+    public class HelloModal : IModal
+    {
+        public string Title => "Введите код";
+        
+        [InputLabel("Введите код!")]
+        [ModalTextInput("greeting_input", TextInputStyle.Paragraph, placeholder: "Код", maxLength: 200)]
+        public string Greeting { get; set; }
+    }
+
         [EnabledInDm(false)]
         [DefaultMemberPermissions(GuildPermission.BanMembers)]
         [SlashCommand("say", "Выдать бан пользователю")]
