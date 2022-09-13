@@ -1,12 +1,12 @@
 using Discord;
-using Discord.WebSocket;
 using Discord.Interactions;
-using Microsoft.AspNetCore.DataProtection;
 using VROT.Common;
+using Newtonsoft.Json;
+using VROT.Models;
 
 namespace VROT.SlashCommands
 {
-    public class HelpCmd : InteractionModuleBase<SocketInteractionContext>
+    public class HelpCommand : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("help", "команда help")]
         public async Task MenuInput()
@@ -18,8 +18,8 @@ namespace VROT.SlashCommands
                 Placeholder = "Выберите категорию..."
             };
 
-            select.AddOption("test1", "1");
-            select.AddOption("test2", "2");
+            select.AddOption("Модерация", "1");
+            select.AddOption("Взаимодействия", "2");
 
             components.WithSelectMenu(select);
             
@@ -34,11 +34,15 @@ namespace VROT.SlashCommands
         [ComponentInteraction("menu1")]
         public async Task MenuHandler(string[] selections)
         {
+            var path = Path.Combine(Environment.CurrentDirectory, "helpConfig.json");
+            var json = await File.ReadAllTextAsync(path);
+            var activity = JsonConvert.DeserializeObject<Event>(json);
+
             if (selections.First() == "1")
             {            
                 var embed = new VrotEmbedBuilder()
                     .WithTitle($"Раздел с модерацией")
-                    .WithDescription("Список команд бота")
+                    .AddField("Модерация",$"{activity?.Mod}" , true)
                     .WithCurrentTimestamp()
                     .Build();
                 await RespondAsync("", embed: embed, ephemeral: true);
@@ -47,7 +51,7 @@ namespace VROT.SlashCommands
             {
                 var embed = new VrotEmbedBuilder()
                     .WithTitle($"Раздел с плющками")
-                    .WithDescription("Список команд бота")
+                    .AddField("Взаимодействия", $"{activity?.Interaction}")
                     .WithCurrentTimestamp()
                     .Build();
                 await RespondAsync("", embed: embed, ephemeral: true);

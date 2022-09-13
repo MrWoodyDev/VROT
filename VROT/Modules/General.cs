@@ -72,27 +72,30 @@ namespace VROT.Modules
             {
                 int randNum = 0;
                 Random random = new Random();
-                randNum = random.Next(1, 7);
+                randNum = random.Next(0, 7);
 
                 switch (randNum)
                 {
+                    case 0:
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, да");
+                        break;
                     case 1:
-                        await ReplyAsync($"**{Context.Message.Author.Username}**, да");
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, нет");
                         break;
                     case 2:
-                        await ReplyAsync($"**{Context.Message.Author.Username}**, нет");
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, возможно да");
                         break;
                     case 3:
-                        await ReplyAsync($"**{Context.Message.Author.Username}**, возможно да");
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, возможно нет");
                         break;
                     case 4:
-                        await ReplyAsync($"**{Context.Message.Author.Username}**, возможно нет");
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, иди нахуй");
                         break;
                     case 5:
-                        await ReplyAsync($"**{Context.Message.Author.Username}**, иди нахуй");
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, за небольшую оплату, можешь пойти нахуй");
                         break;
                     case 6:
-                        await ReplyAsync($"**{Context.Message.Author.Username}**, за небольшую оплату, можешь пойти нахуй");
+                        await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, сейчас позову главноного и с тобой разберёмся");
                         break;
                 }
             }
