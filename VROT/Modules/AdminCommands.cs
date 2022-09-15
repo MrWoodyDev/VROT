@@ -1,5 +1,4 @@
-﻿using System.Net.NetworkInformation;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using VROT.Common;
@@ -30,16 +29,30 @@ namespace VROT.Modules
         [RequireUserPermission(GuildPermission.BanMembers, ErrorMessage = "У вас нет прав банить участников")]
         public async Task BanMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
-            await RunAdminCommands(user,"Участник получил бан", reason);
+            if (!CommandHelpersPrefix.IsCommandValidPrefix(Context, user, out string validationMessage))
+            {
+                await ReplyAsync(validationMessage);
+                return;
+            }
+
             await Context.Guild.AddBanAsync(user, 0, reason);
+
+            await ReplyAsync(embed: CommandHelpersPrefix.GetEmbedPrefix(Context, user, "Участник получил бан", reason));
         }
 
         [Command("kick")]
         [RequireUserPermission(GuildPermission.KickMembers, ErrorMessage = "У вас нет прав выгонять учатсников")]
         public async Task KickMember(SocketGuildUser user = null, [Remainder] string reason = null)
         {
-            await RunAdminCommands(user,"Участник получил наказание", reason);
+            if (!CommandHelpersPrefix.IsCommandValidPrefix(Context, user, out string validationMessage))
+            {
+                await ReplyAsync(validationMessage);
+                return;
+            }
+
             await user.KickAsync(reason);
+
+            await ReplyAsync(embed: CommandHelpersPrefix.GetEmbedPrefix(Context, user, "Участник получил бан", reason));
         }
 
         [Command("mute")]
@@ -52,33 +65,10 @@ namespace VROT.Modules
 
             var timeOutDate = DateTime.Now;
 
-            if (user == null)
+            if (!CommandHelpersPrefix.IsCommandValidPrefix(Context, user, out string validationMessage))
             {
-                await ReplyAsync(":x: Пользователь не указан");
+                await ReplyAsync(validationMessage);
                 return;
-            }
-
-            if (Context.Message.Author == user)
-            {
-                await ReplyAsync($":x: **{Context.Message.Author.Username}**, вы не можете себе выдать наказание");
-                return;
-            }
-
-            if (((Context.User as SocketGuildUser)!).Hierarchy <= user.Hierarchy)
-            {
-                await ReplyAsync($":x: **{Context.Message.Author.Username}**, ваша роль ниже чем у пользователя **{user.Username}**");
-                return;
-            }
-
-            if (Context.Guild.GetUser(Context.Client.CurrentUser.Id).Hierarchy <= user.Hierarchy)
-            {
-                await ReplyAsync($":x: **{Context.Message.Author.Username}**, роль бота ниже чем у пользователя **{user.Username}**");
-                return;
-            }
-
-            if (reason == null)
-            {
-                reason = "Причина не указана";
             }
 
             switch (units)

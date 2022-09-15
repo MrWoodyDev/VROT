@@ -19,15 +19,14 @@ namespace VROT.Models
         [JsonProperty("link")]
         public string? Link { get; set; }
 
-        [JsonProperty("key")]
-        [JsonConverter(typeof(ParseStringConverter))]
-        public long Key { get; set; }
+        [JsonProperty("interaction")]
+        public string? Interaction { get; set; }
 
         [JsonProperty("accessibility")]
         public double Accessibility { get; set; }
 
-        [JsonProperty("image")]
-        public string? Image { get; set; }
+        [JsonProperty("mod")]
+        public string? Mod { get; set; }
     }
 
     public partial class Event

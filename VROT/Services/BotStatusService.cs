@@ -1,5 +1,4 @@
-﻿using Discord;
-using Discord.Addons.Hosting;
+﻿using Discord.Addons.Hosting;
 using Discord.Addons.Hosting.Util;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
