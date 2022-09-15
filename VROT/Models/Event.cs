@@ -27,6 +27,9 @@ namespace VROT.Models
 
         [JsonProperty("mod")]
         public string? Mod { get; set; }
+
+        [JsonProperty("fun")]
+        public string? Fun { get; set; }
     }
 
     public partial class Event

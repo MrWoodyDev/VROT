@@ -20,6 +20,7 @@ namespace VROT.SlashCommands
 
             select.AddOption("Модерация", "1");
             select.AddOption("Взаимодействия", "2");
+            select.AddOption("Развлекательные", "3");
 
             components.WithSelectMenu(select);
             
@@ -47,11 +48,22 @@ namespace VROT.SlashCommands
                     .Build();
                 await RespondAsync("", embed: embed, ephemeral: true);
             }
+
             if (selections.First() == "2")
             {
                 var embed = new VrotEmbedBuilder()
                     .WithTitle($"Раздел с плющками")
                     .AddField("Взаимодействия", $"{activity?.Interaction}")
+                    .WithCurrentTimestamp()
+                    .Build();
+                await RespondAsync("", embed: embed, ephemeral: true);
+            }
+
+            if (selections.First() == "3")
+            {
+                var embed = new VrotEmbedBuilder()
+                    .WithTitle("Раздел равлекательных команд")
+                    .AddField("Развлечения", $"{activity?.Fun}")
                     .WithCurrentTimestamp()
                     .Build();
                 await RespondAsync("", embed: embed, ephemeral: true);
