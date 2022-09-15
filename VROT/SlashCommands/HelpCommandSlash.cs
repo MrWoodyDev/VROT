@@ -6,7 +6,7 @@ using VROT.Models;
 
 namespace VROT.SlashCommands
 {
-    public class HelpCommand : InteractionModuleBase<SocketInteractionContext>
+    public class HelpCommandSlash : InteractionModuleBase<SocketInteractionContext>
     {
         [SlashCommand("help", "команда help")]
         public async Task MenuInput()
