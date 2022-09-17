@@ -51,6 +51,17 @@ namespace VROT.Common
 
             return embed;
         }
+
+        public static Embed GetHelpEmbedSlash(string title, string name, string? value, bool inline)
+        {
+            var embed = new VrotEmbedBuilder()
+                .WithTitle(title)
+                .AddField(name, $"{value}", inline)
+                .WithCurrentTimestamp()
+                .Build();
+
+            return embed;
+        }
     }
 }
 

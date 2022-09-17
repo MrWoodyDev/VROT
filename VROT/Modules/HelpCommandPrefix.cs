@@ -42,32 +42,17 @@ namespace VROT.Modules
 
             if (selections.First() == "1")
             {
-                var embed = new VrotEmbedBuilder()
-                    .WithTitle($"Раздел с модерацией")
-                    .AddField("Модерация", $"{activity?.Mod}", true)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync("", embed: embed);
+                await ReplyAsync(embed: CommandHelpersPrefix.GetHelpEmbedPrefix("Раздел с модерацией", "Модерация",activity?.Mod, true));
             }
 
             if (selections.First() == "2")
             {
-                var embed = new VrotEmbedBuilder()
-                    .WithTitle($"Раздел с плющками")
-                    .AddField("Взаимодействия", $"{activity?.Interaction}")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync("", embed: embed);
+                await ReplyAsync(embed: CommandHelpersPrefix.GetHelpEmbedPrefix("Раздел с плюшками", "Взаимодействия", activity?.Interaction, true));
             }
 
             if (selections.First() == "3")
             {
-                var embed = new VrotEmbedBuilder()
-                    .WithTitle("Раздел равлекательных команд")
-                    .AddField("Развлечения", $"{activity?.Fun}")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await ReplyAsync("", embed: embed);
+                await ReplyAsync(embed: CommandHelpersPrefix.GetHelpEmbedPrefix("Раздел развлекательных команд", "Развлечения", activity?.Fun, true));
             }
         }
 

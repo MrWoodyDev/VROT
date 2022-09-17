@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using VROT.Models;
 
 namespace VROT.Common
 {
@@ -45,6 +46,17 @@ namespace VROT.Common
                 .AddField("**Причина**", $"{reason}", true)
                 .AddField("**Участник**", $"**{user.Username}**#{user.Discriminator} (ID {user.Id})")
                 .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+                .WithCurrentTimestamp()
+                .Build();
+
+            return embed;
+        }
+
+        public static Embed GetHelpEmbedPrefix(string title, string name, string? value, bool inline)
+        {
+            var embed = new VrotEmbedBuilder()
+                .WithTitle(title)
+                .AddField(name, $"{value}", inline)
                 .WithCurrentTimestamp()
                 .Build();
 

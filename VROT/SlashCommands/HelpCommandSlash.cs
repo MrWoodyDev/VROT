@@ -40,33 +40,18 @@ namespace VROT.SlashCommands
             var activity = JsonConvert.DeserializeObject<Event>(json);
 
             if (selections.First() == "1")
-            {            
-                var embed = new VrotEmbedBuilder()
-                    .WithTitle($"Раздел с модерацией")
-                    .AddField("Модерация",$"{activity?.Mod}" , true)
-                    .WithCurrentTimestamp()
-                    .Build();
-                await RespondAsync("", embed: embed, ephemeral: true);
+            {
+                await RespondAsync("", embed: CommandHelpersSlash.GetHelpEmbedSlash("Раздел с модерацией", "Модерация", activity?.Mod, true), ephemeral: true);
             }
 
             if (selections.First() == "2")
             {
-                var embed = new VrotEmbedBuilder()
-                    .WithTitle($"Раздел с плющками")
-                    .AddField("Взаимодействия", $"{activity?.Interaction}")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await RespondAsync("", embed: embed, ephemeral: true);
+                await RespondAsync("", embed: CommandHelpersSlash.GetHelpEmbedSlash("Раздел с плюшками", "Взаимодействия", activity?.Interaction, true), ephemeral: true);
             }
 
             if (selections.First() == "3")
             {
-                var embed = new VrotEmbedBuilder()
-                    .WithTitle("Раздел равлекательных команд")
-                    .AddField("Развлечения", $"{activity?.Fun}")
-                    .WithCurrentTimestamp()
-                    .Build();
-                await RespondAsync("", embed: embed, ephemeral: true);
+                await RespondAsync("", embed: CommandHelpersSlash.GetHelpEmbedSlash("Раздел развлекательных команд", "Развлечения", activity?.Fun, true), ephemeral: true);
             }
         }    
 
