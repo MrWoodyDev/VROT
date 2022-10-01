@@ -1,19 +1,18 @@
 ﻿using Newtonsoft.Json;
 
-namespace Tenor
+namespace Tenor;
+
+public class MediaObject
 {
-    public class MediaObject
-    {
-		[JsonProperty("dims")]
-		public int[] Dims;
+    [JsonProperty("dims")]
+    public int[] Dims;
 
-		[JsonProperty("duration")]
-		public double Duration;
+    [JsonProperty("duration")]
+    public double Duration;
 
-		[JsonProperty("size")]
-		public int Size;
+    [JsonProperty("size")]
+    public int Size;
 
-		[JsonProperty("url")]
-		public Uri Url;
-	}
+    [JsonProperty("url")]
+    public Uri Url;
 }

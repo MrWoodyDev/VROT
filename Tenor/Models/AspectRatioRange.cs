@@ -1,9 +1,8 @@
-﻿namespace Tenor
+﻿namespace Tenor;
+
+public enum AspectRatioRange
 {
-    public enum AspectRatioRange
-    {
-        all,
-        wide,
-        standart
-    }
+    all,
+    wide,
+    standart
 }

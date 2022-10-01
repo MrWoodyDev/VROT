@@ -1,10 +1,9 @@
-﻿namespace Tenor
+﻿namespace Tenor;
+
+public enum ContentFilter
 {
-    public enum ContentFilter
-    {
-        off,
-        low,
-        medium,
-        high
-    }
+    off,
+    low,
+    medium,
+    high
 }

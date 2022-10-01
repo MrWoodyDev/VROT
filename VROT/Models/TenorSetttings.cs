@@ -1,9 +1,8 @@
-﻿namespace VROT.Models
-{
-    internal class TenorSetttings
-    {
-        public string ApiKey { get; set; }
+﻿namespace VROT.Models;
 
-        public string ClientKey { get; set; }
-    }
+internal class TenorSetttings
+{
+    public string ApiKey { get; set; }
+
+    public string ClientKey { get; set; }
 }

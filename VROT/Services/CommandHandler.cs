@@ -6,48 +6,47 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace VROT.Services
+namespace VROT.Services;
+
+public class CommandHandler : DiscordClientService
 {
-    public class CommandHandler : DiscordClientService
+    private readonly IServiceProvider _provider;
+    private readonly CommandService _commandService;
+    private readonly IConfiguration _config;
+
+    public CommandHandler(DiscordSocketClient client, ILogger<CommandHandler> logger, IServiceProvider provider,
+        CommandService commandService, IConfiguration config) : base(client, logger)
     {
-        private readonly IServiceProvider _provider;
-        private readonly CommandService _commandService;
-        private readonly IConfiguration _config;
+        _provider = provider;
+        _commandService = commandService;
+        _config = config;
+    }
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        Client.MessageReceived += HandleMessage;
+        _commandService.CommandExecuted += CommandExecutedAsync;
+        await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
+    }
 
-        public CommandHandler(DiscordSocketClient client, ILogger<CommandHandler> logger, IServiceProvider provider,
-            CommandService commandService, IConfiguration config) : base(client, logger)
-        {
-            _provider = provider;
-            _commandService = commandService;
-            _config = config;
-        }
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            Client.MessageReceived += HandleMessage;
-            _commandService.CommandExecuted += CommandExecutedAsync;
-            await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
-        }
+    private async Task HandleMessage(SocketMessage incomingMessage)
+    {
+        if (incomingMessage is not SocketUserMessage message) return;
+        if (message.Source != MessageSource.User) return;
 
-        private async Task HandleMessage(SocketMessage incomingMessage)
-        {
-            if (incomingMessage is not SocketUserMessage message) return;
-            if (message.Source != MessageSource.User) return;
+        int argPos = 0;
+        if (!message.HasStringPrefix(_config["Prefix"], ref argPos) && !message.HasMentionPrefix(Client.CurrentUser, ref argPos)) return;
 
-            int argPos = 0;
-            if (!message.HasStringPrefix(_config["Prefix"], ref argPos) && !message.HasMentionPrefix(Client.CurrentUser, ref argPos)) return;
+        var context = new SocketCommandContext(Client, message);
+        await _commandService.ExecuteAsync(context, argPos, _provider);
+    }
 
-            var context = new SocketCommandContext(Client, message);
-            await _commandService.ExecuteAsync(context, argPos, _provider);
-        }
+    public async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+    {
+        Logger.LogInformation("User {user} attempted to use command {command}", context.User, command.Value.Name);
 
-        public async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
-        {
-            Logger.LogInformation("User {user} attempted to use command {command}", context.User, command.Value.Name);
-
-            if (!result.IsSuccess)
-                Console.WriteLine(result.ErrorReason);
-            if (result.Error.Equals(CommandError.UnmetPrecondition))
-                await context.Channel.SendMessageAsync(result.ErrorReason);
-        }
+        if (!result.IsSuccess)
+            Console.WriteLine(result.ErrorReason);
+        if (result.Error.Equals(CommandError.UnmetPrecondition))
+            await context.Channel.SendMessageAsync(result.ErrorReason);
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace VROT.Services
+﻿namespace VROT.Services;
+
+public interface ITenorService
 {
-    public interface ITenorService
-    {
-        Task<string?> GetRandomGifUrlAsync(string search);
-    }
+    Task<string?> GetRandomGifUrlAsync(string search);
 }
