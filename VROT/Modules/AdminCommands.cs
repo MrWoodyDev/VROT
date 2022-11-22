@@ -57,7 +57,7 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
 
     [Command("mute")]
     [RequireUserPermission(GuildPermission.ManageMessages, ErrorMessage = "Вы не имеете прав мутить участников")]
-    public async Task Mute(SocketGuildUser user = null, string timeMute = "1m", [Remainder] string reason = null)
+    public async Task Mute(SocketGuildUser user, string timeMute = "1m", [Remainder] string? reason = "Причина не указана")
     {
         var units = timeMute.Last().ToString();
         int.TryParse(timeMute.Substring(0, timeMute.Length - 1), out var time);

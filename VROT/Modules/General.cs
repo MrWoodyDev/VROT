@@ -18,7 +18,7 @@ public class General : ModuleBase<SocketCommandContext>
     [Alias("p")]
     public async Task PingAsync()
     {
-        await Context.Message.ReplyAsync($"Вставай");
+        await Context.Message.ReplyAsync($":fap:");
         await Context.Channel.DeleteMessageAsync(Context.Message.Id);
     }
 
@@ -72,7 +72,7 @@ public class General : ModuleBase<SocketCommandContext>
         {
             int randNum = 0;
             Random random = new Random();
-            randNum = random.Next(0, 7);
+            randNum = random.Next(0, 4);
 
             switch (randNum)
             {
@@ -87,15 +87,6 @@ public class General : ModuleBase<SocketCommandContext>
                     break;
                 case 3:
                     await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, возможно нет");
-                    break;
-                case 4:
-                    await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, иди нахуй");
-                    break;
-                case 5:
-                    await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, за небольшую оплату, можешь пойти нахуй");
-                    break;
-                case 6:
-                    await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, сейчас позову главноного и с тобой разберёмся");
                     break;
             }
         }
