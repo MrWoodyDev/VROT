@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System.Security.Cryptography.X509Certificates;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using VROT.Common;
@@ -18,7 +19,7 @@ public class General : ModuleBase<SocketCommandContext>
     [Alias("p")]
     public async Task PingAsync()
     {
-        await Context.Message.ReplyAsync($":fap:");
+        await Context.Message.ReplyAsync("pong");
         await Context.Channel.DeleteMessageAsync(Context.Message.Id);
     }
 
@@ -90,5 +91,21 @@ public class General : ModuleBase<SocketCommandContext>
                     break;
             }
         }
+    }
+
+    [Command("emoji")]
+    public async Task EmojiAsync(string emote)
+    {
+       var embed = new VrotEmbedBuilder()
+           .WithTitle("Emoji")
+           .AddField("Name", Emote.Parse(emote).Name, true)
+           .AddField("ID", Emote.Parse(emote).Id, true)
+           .AddField("Animated", Emote.Parse(emote).Animated, false)
+           .AddField("URL", Emote.Parse(emote).Url, false)
+           .WithThumbnailUrl(Emote.Parse(emote).Url)
+           .WithCurrentTimestamp()
+           .Build();
+
+       await ReplyAsync(embed: embed);
     }
 }
