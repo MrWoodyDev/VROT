@@ -1,6 +1,6 @@
 ﻿namespace VROT.Models;
 
-internal class TenorSetttings
+public class TenorSettings
 {
     public string ApiKey { get; set; }
 

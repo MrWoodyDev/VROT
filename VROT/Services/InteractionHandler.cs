@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace VROT.Services;
 
 // NOTE: This command handler is specifically for using InteractionService-based commands
-internal class InteractionHandler : DiscordClientService
+public class InteractionHandler : DiscordClientService
 {
     private readonly IServiceProvider _provider;
     private readonly InteractionService _interactionService;

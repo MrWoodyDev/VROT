@@ -4,13 +4,13 @@ using VROT.Models;
 
 namespace VROT.Services;
 
-internal class TenorService : ITenorService
+public class TenorService : ITenorService
 {
     private readonly TenorClient _tenorClient;
 
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public TenorService(IHttpClientFactory httpClientFactory, IOptions<TenorSetttings> options)
+    public TenorService(IHttpClientFactory httpClientFactory, IOptions<TenorSettings> options)
     {
         _httpClientFactory = httpClientFactory;
         _tenorClient = new TenorClient(_httpClientFactory.CreateClient(), options.Value.ApiKey, options.Value.ClientKey);

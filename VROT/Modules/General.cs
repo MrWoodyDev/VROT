@@ -30,17 +30,20 @@ public class General : ModuleBase<SocketCommandContext>
 
         if (socketGuildUser != null)
         {
-            var embed = new VrotEmbedBuilder()
-                .WithTitle($"{socketGuildUser.Username}#{socketGuildUser.Discriminator}")
-                .AddField("ID", socketGuildUser.Id, true)
-                .AddField("Name", $"{socketGuildUser.Username}#{socketGuildUser.Discriminator}", true)
-                .AddField("Created at", socketGuildUser.CreatedAt, true)
-                .AddField("Join at", socketGuildUser.JoinedAt, true)
-                .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
-                .WithCurrentTimestamp()
-                .Build();
+            if (socketGuildUser.JoinedAt != null)
+            {
+                var embed = new VrotEmbedBuilder()
+                    .WithTitle($"{socketGuildUser.Username}#{socketGuildUser.Discriminator}")
+                    .AddField("ID", socketGuildUser.Id, true)
+                    .AddField("Name", $"{socketGuildUser.Username}#{socketGuildUser.Discriminator}", true)
+                    .AddField("Created at", $"<t:{((DateTimeOffset)socketGuildUser.CreatedAt).ToUnixTimeSeconds()}:f>", true)
+                    .AddField("Join at", $"<t:{((DateTimeOffset)socketGuildUser.JoinedAt.Value).ToUnixTimeSeconds()}:f>", true)
+                    .WithThumbnailUrl(socketGuildUser.GetAvatarUrl() ?? socketGuildUser.GetDefaultAvatarUrl())
+                    .WithCurrentTimestamp()
+                    .Build();
 
-            await ReplyAsync(embed: embed);
+                await ReplyAsync(embed: embed);
+            }
         }
     }
 
@@ -73,7 +76,7 @@ public class General : ModuleBase<SocketCommandContext>
         {
             int randNum = 0;
             Random random = new Random();
-            randNum = random.Next(0, 4);
+            randNum = random.Next(0, 6);
 
             switch (randNum)
             {
@@ -88,6 +91,12 @@ public class General : ModuleBase<SocketCommandContext>
                     break;
                 case 3:
                     await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, возможно нет");
+                    break;
+                case 4:
+                    await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, иди нахуй");
+                    break;
+                case 5:
+                    await Context.Message.ReplyAsync($"{Context.Message.Author.Mention}, за небольшую оплату, можешь пойти нахуй");
                     break;
             }
         }

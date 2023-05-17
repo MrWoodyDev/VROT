@@ -255,4 +255,79 @@ public class AdminCommandsSlash : InteractionModuleBase<SocketInteractionContext
         await RespondAsync(components: component.Build(), ephemeral: true);
 
     }
+
+    [SlashCommand("giveaway", "Сделать Giveaway.")]
+    public async Task StartGiveaway(string time, string message)
+    {
+        int minutes = 0;
+        string timeFormat = "неизвестно";
+
+        if (time.EndsWith("d"))
+        {
+            int days = int.Parse(time.Substring(0, time.Length - 1));
+            minutes = days * 24 * 60;
+            timeFormat = days == 1 ? "день" : days > 1 && days < 5 ? "дня" : "дней";
+        }
+        else if (time.EndsWith("h"))
+        {
+            int hours = int.Parse(time.Substring(0, time.Length - 1));
+            minutes = hours * 60;
+            timeFormat = hours == 1 ? "час" : hours > 1 && hours < 5 ? "часа" : "часов";
+        }
+        else if (time.EndsWith("m"))
+        {
+            minutes = int.Parse(time.Substring(0, time.Length - 1));
+            timeFormat = minutes == 1 ? "минута" : minutes > 1 && minutes < 5 ? "минуты" : "минут";
+        }
+
+        var embed = new VrotEmbedBuilder();
+        embed.WithTitle($"{message}");
+        embed.AddField("От", Context.User.Mention);
+        embed.AddField("Заканчивается", $"<t:{new DateTimeOffset(DateTime.UtcNow.AddMinutes(minutes)).ToUnixTimeSeconds()}:R> (<t:{new DateTimeOffset(DateTime.UtcNow.AddMinutes(minutes)).ToUnixTimeSeconds()}:F>)");
+        var msg = await Context.Channel.SendMessageAsync("", false, embed.Build());
+        IEmote reactionEmote = new Emoji("\uD83C\uDF89");
+        await msg.AddReactionAsync(reactionEmote);
+
+        var endTime = DateTime.UtcNow.AddMinutes(minutes);
+        var users = new List<IGuildUser>().Where(user => !user.IsBot).ToList(); // Создаем пустой список для участников
+
+        while (DateTime.UtcNow < endTime)
+        {
+            var reactions = await msg.GetReactionUsersAsync(reactionEmote, int.MaxValue).FlattenAsync();
+            foreach (var reactionUser in reactions)
+            {
+                var user = await ((IGuild)Context.Guild).GetUserAsync(reactionUser.Id);
+                if (user != null && !users.Contains(user))
+                {
+                    users.Add(user);
+                }
+            }
+
+            var participants = users.Where(user => !user.IsBot).Distinct(); // Выбираем участников из списка users
+            embed.WithFooter($"Заканчивается в: {endTime} | Участники: {participants.Count()}");
+            await msg.ModifyAsync(x => x.Embed = embed.Build(), null);
+
+            if (DateTime.UtcNow >= endTime)
+            {
+                break;
+            }
+
+            await Task.Delay(1000);
+        }
+
+        var winner = users.Where(user => user.Id != Context.Client.CurrentUser.Id).ToList()[new Random().Next(users.Count - 1)];
+
+        embed.WithTitle("Giveaway окончен");
+        embed.WithDescription($":tada: Поздравляем {winner.Mention} за победу в розыгрыше!");
+        embed.WithFooter("Закончилось в: " + endTime);
+        await msg.ModifyAsync(x => x.Embed = embed.Build(), null);
+
+        //var embed1 = new VrotEmbedBuilder();
+        //embed1.WithDescription($":tada: Поздравляем {winner.Mention}, Вы выиграли **'{message}'**");
+
+        await Context.Channel.SendMessageAsync($"{winner.Mention} лови аптечку");
+        await winner.SetTimeOutAsync(TimeSpan.FromMinutes(10));
+        
+    }
+
 }

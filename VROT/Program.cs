@@ -41,7 +41,10 @@ public class Program
                 LogGatewayIntentWarnings = false,
                 MessageCacheSize = 200,
                 GatewayIntents = GatewayIntents.All |
-                                 GatewayIntents.AllUnprivileged
+                                 GatewayIntents.AllUnprivileged |
+                                 GatewayIntents.DirectMessageReactions |
+                                 GatewayIntents.GuildMessageReactions |
+                                 GatewayIntents.GuildEmojis
             };
 
             config.Token = context.Configuration["Token"];
@@ -59,7 +62,7 @@ public class Program
         });
         builder.Host.ConfigureServices((context, services) =>
         {
-            services.Configure<TenorSetttings>(context.Configuration.GetSection("Tenor"));
+            services.Configure<TenorSettings>(context.Configuration.GetSection("Tenor"));
             services.AddHostedService<CommandHandler>();
             services.AddHostedService<InteractionHandler>();
             services.AddHostedService<BotStatusService>();
